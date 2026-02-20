@@ -18,4 +18,38 @@ model User {
   role          String   @default("user") // 'admin' or 'user'
   created_at    DateTime @default(now())
   updated_at    DateTime @updatedAt
+
+  movieTrackings MovieTracking[]
+}
+
+model Movie {
+  id             Int      @id // TMDB ID
+  title          String
+  original_title String
+  release_date   DateTime
+  poster_path    String
+  backdrop_path  String
+  overview       String
+  runtime        Int
+  genres         Json
+  metadata       Json
+  last_synced    DateTime
+  tracking       MovieTracking[]
+}
+
+model MovieTracking {
+  id           Int      @id @default(autoincrement())
+  user_id      Int
+  movie_id     Int
+  status       String // 'watching', 'completed', 'plan_to_watch', 'dropped'
+  rating       Int?    // nullable, 1-10
+  watched_date DateTime? // nullable
+  notes        String? // nullable
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  user   User  @relation(fields: [user_id], references: [id])
+  movie  Movie @relation(fields: [movie_id], references: [id])
+
+  @@unique([user_id, movie_id])
 }
