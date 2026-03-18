@@ -23,7 +23,8 @@ model User {
 }
 
 model Movie {
-  id             Int      @id // TMDB ID
+  id             Int      @id @default(autoincrement())
+  tmdb_id        Int      @unique // TMDB movie ID
   title          String
   original_title String
   release_date   DateTime
@@ -32,7 +33,6 @@ model Movie {
   overview       String
   runtime        Int
   genres         Json
-  metadata       Json
   last_synced    DateTime
   tracking       MovieTracking[]
 }
