@@ -19,49 +19,90 @@ import {
     MediaCardTitle,
 } from "@/components/media-card";
 import Link from "next/link";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { MovieSearchResult } from "@/interfaces/movie";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const searchFormSchema = z.object({
     query: z.string().min(1, "Should not be empty"),
+    page: z.number().min(1),
 });
 
+import { Button, buttonVariants } from "@/components/ui/button";
 
 export default function AddMoviePage() {
-    const [searchResults, setSearchResults] = useState<MovieSearchResult | null>(null);
-    const [hasSearched, setHasSearched] = useState(false);
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    const pathname = usePathname();
+
+    const [searchResults, setSearchResults] =
+        useState<MovieSearchResult | null>(null);
+    const [loading, setLoading] = useState(false);
 
     const form = useForm<z.infer<typeof searchFormSchema>>({
         resolver: zodResolver(searchFormSchema),
         defaultValues: {
             query: "",
+            page: 1,
         },
     });
 
-    async function onSubmit(data: z.infer<typeof searchFormSchema>) {
-        const { query } = data;
+    useEffect(() => {
+        const query = (searchParams.get("query") ?? "").trim();
+        const pageRaw = Number(searchParams.get("page") ?? "1");
+        const page = Number.isFinite(pageRaw) && pageRaw > 0 ? pageRaw : 1;
+
+        form.setValue("query", query);
+        form.setValue("page", page);
+
+        if (query) {
+            void fetchPage(query, page);
+            return;
+        }
+
+        setSearchResults(null);
+    }, [searchParams, form]);
+
+    async function fetchPage(query: string, page: number) {
+        setLoading(true);
         try {
             const response = await fetch(
-                `/api/movies/search?query=${encodeURIComponent(query)}`,
+                `/api/movies/search?query=${encodeURIComponent(query)}&page=${page}`,
             );
             if (!response.ok) {
                 throw new Error(
                     `Error searching movies: ${response.statusText}`,
                 );
             }
-            const results = await response.json() as MovieSearchResult;
+            const results = (await response.json()) as MovieSearchResult;
             setSearchResults(results);
-            setHasSearched(true);
-            console.log(results);
+            setLoading(false);
         } catch (error) {
-            setHasSearched(true);
+            setLoading(false);
             console.error(error);
         }
     }
 
+    function onSubmit(data: z.infer<typeof searchFormSchema>) {
+        const query = data.query.trim();
+        if (!query) return;
+        // update URL; effect will trigger fetch
+        const params = new URLSearchParams(searchParams.toString());
+        params.set("query", query);
+        params.set("page", "1");
+        router.push(`${pathname}?${params.toString()}`);
+    }
+
+    function generatePageLink(page: number) {
+        const params = new URLSearchParams(searchParams.toString());
+        params.set("query", form.getValues("query") ?? "");
+        params.set("page", page.toString());
+        return `${pathname}?${params.toString()}`;
+    }
+
     return (
         <main className="flex flex-col gap-4">
-            <form onSubmit={form.handleSubmit(onSubmit)}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="mb-2">
                 <Controller
                     control={form.control}
                     name="query"
@@ -101,27 +142,90 @@ export default function AddMoviePage() {
     );
 
     function renderMediaSearchResults() {
-        if (!hasSearched) {
+        if (!loading && !searchResults) {
             return <p>Start by searching for a movie above.</p>;
+        }
+        if (loading) {
+            return <p>Loading...</p>;
         }
         if (!searchResults || searchResults.results.length === 0) {
             return <p>No results found.</p>;
         }
-        return searchResults.results.map((movie) => (
-            <Link key={movie.id} href={`/movies/${movie.id}`}>
-                <MediaCard>
-                    <MediaCardImage
-                        src={movie.posterPath || ""}
-                        alt={movie.title}
-                    />
-                    <MediaCardContent>
-                        <MediaCardTitle>{movie.title}</MediaCardTitle>
-                        <MediaCardDescription>
-                            {movie.overview}
-                        </MediaCardDescription>
-                    </MediaCardContent>
-                </MediaCard>
-            </Link>
-        ));
+        return (
+            <>
+                <span className="text-sm text-muted-foreground">
+                    {searchResults.totalResults} results found
+                </span>
+                {searchResults.results.map((movie) => (
+                    <Link key={movie.id} href={`/movies/${movie.id}`}>
+                        <MediaCard>
+                            <MediaCardImage
+                                src={movie.posterPath || ""}
+                                alt={movie.title}
+                            />
+                            <MediaCardContent>
+                                <MediaCardTitle>{movie.title}</MediaCardTitle>
+                                <MediaCardDescription>
+                                    {movie.overview}
+                                </MediaCardDescription>
+                            </MediaCardContent>
+                        </MediaCard>
+                    </Link>
+                ))}
+                {searchResults.totalPages > 1 && (
+                    <div className="grid grid-cols-3 w-full md:w-1/3 mx-auto items-center justify-items-center mt-4 gap-2">
+                        <Button
+                            className={
+                                "justify-self-start " +
+                                (searchResults.page <= 1
+                                    ? "invisible pointer-events-none"
+                                    : "")
+                            }
+                            asChild
+                            variant="link"
+                            size="sm"
+                        >
+                            <Link
+                                href={generatePageLink(searchResults.page - 1)}
+                                aria-hidden={searchResults.page <= 1}
+                                tabIndex={searchResults.page <= 1 ? -1 : 0}
+                            >
+                                Previous
+                            </Link>
+                        </Button>
+                        <span className="inline-flex items-center text-sm text-muted-foreground">
+                            Page {searchResults.page} of {searchResults.totalPages}
+                        </span>
+                        <Button
+                            className={
+                                "justify-self-end " +
+                                (searchResults.page >= searchResults.totalPages
+                                    ? "invisible pointer-events-none"
+                                    : "")
+                            }
+                            asChild
+                            variant="link"
+                            size="sm"
+                        >
+                            <Link
+                                href={generatePageLink(searchResults.page + 1)}
+                                aria-hidden={
+                                    searchResults.page >=
+                                    searchResults.totalPages
+                                }
+                                tabIndex={
+                                    searchResults.page >=
+                                    searchResults.totalPages
+                                        ? -1
+                                        : 0
+                                }
+                            >
+                                Next
+                            </Link>
+                        </Button>
+                    </div>
+                )}
+            </>
+        );
     }
 }

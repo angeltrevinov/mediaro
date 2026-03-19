@@ -44,7 +44,8 @@ export function MediaCardTitle({ children }: React.PropsWithChildren<{}>) {
 }
 
 export function MediaCardDescription({ children }: React.PropsWithChildren<{}>) {
+    // Clamp to 3 lines, show ellipsis if overflow
     return (
-        <CardContent className="px-0">{children}</CardContent>
+        <CardContent className="px-0 line-clamp-6 overflow-hidden text-ellipsis">{children}</CardContent>
     );
 }
