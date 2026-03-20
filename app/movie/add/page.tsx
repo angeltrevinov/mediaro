@@ -20,15 +20,14 @@ import {
 } from "@/components/media-card";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { MovieSearchResult } from "@/interfaces/movie";
 import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { MovieSearchResult } from "@/interfaces/movie";
 
 const searchFormSchema = z.object({
     query: z.string().min(1, "Should not be empty"),
     page: z.number().min(1),
 });
-
-import { Button, buttonVariants } from "@/components/ui/button";
 
 export default function AddMoviePage() {
     const router = useRouter();
@@ -56,18 +55,15 @@ export default function AddMoviePage() {
         form.setValue("page", page);
 
         if (query) {
-            void fetchPage(query, page);
-            return;
+            fetchPage(query, page);
         }
-
-        setSearchResults(null);
     }, [searchParams, form]);
 
     async function fetchPage(query: string, page: number) {
         setLoading(true);
         try {
             const response = await fetch(
-                `/api/movies/search?query=${encodeURIComponent(query)}&page=${page}`,
+                `/api/movie/search?query=${encodeURIComponent(query)}&page=${page}`,
             );
             if (!response.ok) {
                 throw new Error(
@@ -86,7 +82,6 @@ export default function AddMoviePage() {
     function onSubmit(data: z.infer<typeof searchFormSchema>) {
         const query = data.query.trim();
         if (!query) return;
-        // update URL; effect will trigger fetch
         const params = new URLSearchParams(searchParams.toString());
         params.set("query", query);
         params.set("page", "1");
@@ -102,6 +97,15 @@ export default function AddMoviePage() {
 
     return (
         <main className="flex flex-col gap-4">
+            {renderSearchInput()}
+            <section className="flex flex-col gap-2">
+                {renderMediaSearchResults()}
+            </section>
+        </main>
+    );
+
+    function renderSearchInput() {
+        return (
             <form onSubmit={form.handleSubmit(onSubmit)} className="mb-2">
                 <Controller
                     control={form.control}
@@ -135,11 +139,9 @@ export default function AddMoviePage() {
                     )}
                 />
             </form>
-            <section className="flex flex-col gap-2">
-                {renderMediaSearchResults()}
-            </section>
-        </main>
-    );
+        );
+
+    }
 
     function renderMediaSearchResults() {
         if (!loading && !searchResults) {
@@ -157,7 +159,7 @@ export default function AddMoviePage() {
                     {searchResults.totalResults} results found
                 </span>
                 {searchResults.results.map((movie) => (
-                    <Link key={movie.id} href={`/movies/${movie.id}`}>
+                    <Link key={movie.id} href={`/movie/${movie.id}`}>
                         <MediaCard>
                             <MediaCardImage
                                 src={movie.posterPath || ""}
@@ -172,60 +174,65 @@ export default function AddMoviePage() {
                         </MediaCard>
                     </Link>
                 ))}
-                {searchResults.totalPages > 1 && (
-                    <div className="grid grid-cols-3 w-full md:w-1/3 mx-auto items-center justify-items-center mt-4 gap-2">
-                        <Button
-                            className={
-                                "justify-self-start " +
-                                (searchResults.page <= 1
-                                    ? "invisible pointer-events-none"
-                                    : "")
-                            }
-                            asChild
-                            variant="link"
-                            size="sm"
-                        >
-                            <Link
-                                href={generatePageLink(searchResults.page - 1)}
-                                aria-hidden={searchResults.page <= 1}
-                                tabIndex={searchResults.page <= 1 ? -1 : 0}
-                            >
-                                Previous
-                            </Link>
-                        </Button>
-                        <span className="inline-flex items-center text-sm text-muted-foreground">
-                            Page {searchResults.page} of {searchResults.totalPages}
-                        </span>
-                        <Button
-                            className={
-                                "justify-self-end " +
-                                (searchResults.page >= searchResults.totalPages
-                                    ? "invisible pointer-events-none"
-                                    : "")
-                            }
-                            asChild
-                            variant="link"
-                            size="sm"
-                        >
-                            <Link
-                                href={generatePageLink(searchResults.page + 1)}
-                                aria-hidden={
-                                    searchResults.page >=
-                                    searchResults.totalPages
-                                }
-                                tabIndex={
-                                    searchResults.page >=
-                                    searchResults.totalPages
-                                        ? -1
-                                        : 0
-                                }
-                            >
-                                Next
-                            </Link>
-                        </Button>
-                    </div>
-                )}
+                {renderPagination()}
             </>
+        );
+    }
+
+    function renderPagination() {
+        if (!searchResults || searchResults.totalPages <= 1) {
+            return null;
+        }
+        return (
+            <div className="grid grid-cols-3 w-full md:w-1/3 mx-auto items-center justify-items-center mt-4 gap-2">
+                <Button
+                    className={
+                        "justify-self-start " +
+                        (searchResults.page <= 1
+                            ? "invisible pointer-events-none"
+                            : "")
+                    }
+                    asChild
+                    variant="link"
+                    size="sm"
+                >
+                    <Link
+                        href={generatePageLink(searchResults.page - 1)}
+                        aria-hidden={searchResults.page <= 1}
+                        tabIndex={searchResults.page <= 1 ? -1 : 0}
+                    >
+                        Previous
+                    </Link>
+                </Button>
+                <span className="inline-flex items-center text-sm text-muted-foreground">
+                    Page {searchResults.page} of {searchResults.totalPages}
+                </span>
+                <Button
+                    className={
+                        "justify-self-end " +
+                        (searchResults.page >= searchResults.totalPages
+                            ? "invisible pointer-events-none"
+                            : "")
+                    }
+                    asChild
+                    variant="link"
+                    size="sm"
+                >
+                    <Link
+                        href={generatePageLink(searchResults.page + 1)}
+                        aria-hidden={
+                            searchResults.page >= searchResults.totalPages
+                        }
+                        tabIndex={
+                            searchResults.page >= searchResults.totalPages
+                                ? -1
+                                : 0
+                        }
+                    >
+                        Next
+                    </Link>
+                </Button>
+            </div>
         );
     }
 }

@@ -23,8 +23,7 @@ model User {
 }
 
 model Movie {
-  id             Int      @id @default(autoincrement())
-  tmdb_id        Int      @unique // TMDB movie ID
+  id             Int      @id @unique // TMDB movide ID as primary key
   title          String
   original_title String
   release_date   DateTime
