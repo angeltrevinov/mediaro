@@ -13,13 +13,23 @@ datasource db {
 model User {
   id            Int      @id @default(autoincrement())
   username      String   @unique
-  email         String?  @unique
+  name          String
   password_hash String
   role          String   @default("user") // 'admin' or 'user'
   created_at    DateTime @default(now())
   updated_at    DateTime @updatedAt
 
   movieTrackings MovieTracking[]
+  sessions       Session[]
+}
+
+model Session {
+  id         String   @id // The session token itself (crypto.randomUUID())
+  user_id    Int
+  expires_at DateTime
+  created_at DateTime @default(now())
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
 model Movie {

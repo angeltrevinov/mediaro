@@ -31,6 +31,7 @@ export default function MovieDetailsPage({
         const raw = searchParams.get("back") ?? "";
         return raw.startsWith("/") ? raw : null;
     })();
+    
     const [movie, setMovie] = useState<Movie | null>(null);
     const [loading, setLoading] = useState(true);
 

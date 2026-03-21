@@ -29,7 +29,7 @@ const searchFormSchema = z.object({
     page: z.number().min(1),
 });
 
-export default function AddMoviePage() {
+export default function SearchMoviePage() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const pathname = usePathname();

@@ -5,7 +5,7 @@ import Link from "next/link";
 export default function Home() {
   return (
       <main>
-        <Link href="/movie/add">Add Movie</Link>
+        <Link href="/movie/search">Search Movies</Link>
       </main>
   );
 }
