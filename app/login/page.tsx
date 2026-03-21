@@ -41,6 +41,7 @@ export default function LoginPage() {
     const form = useForm<z.infer<typeof loginSchema>>({
         resolver: zodResolver(loginSchema),
         defaultValues: { username: "", password: "" },
+        mode: "onChange",
     });
 
     async function onSubmit(data: z.infer<typeof loginSchema>) {
@@ -94,8 +95,7 @@ export default function LoginPage() {
                                         {...field}
                                         id={field.name}
                                         aria-invalid={fieldState.invalid}
-                                        autoComplete="username"
-                                        placeholder="your_username"
+                                        placeholder="your username"
                                     />
                                     {fieldState.invalid && (
                                         <FieldError
@@ -118,7 +118,6 @@ export default function LoginPage() {
                                         id={field.name}
                                         type="password"
                                         aria-invalid={fieldState.invalid}
-                                        autoComplete="current-password"
                                         placeholder="••••••••"
                                     />
                                     {fieldState.invalid && (
@@ -134,7 +133,7 @@ export default function LoginPage() {
                         <Button
                             type="submit"
                             className="w-full"
-                            disabled={loading}
+                            disabled={loading || !form.formState.isValid}
                         >
                             {loading ? "Signing in…" : "Sign in"}
                         </Button>

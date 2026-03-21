@@ -45,6 +45,7 @@ export default function RegisterPage() {
     const form = useForm<z.infer<typeof registerSchema>>({
         resolver: zodResolver(registerSchema),
         defaultValues: { username: "", name: "", password: "" },
+        mode: "onChange",
     });
 
     async function onSubmit(data: z.infer<typeof registerSchema>) {
@@ -100,7 +101,6 @@ export default function RegisterPage() {
                                         {...field}
                                         id={field.name}
                                         aria-invalid={fieldState.invalid}
-                                        autoComplete="name"
                                         placeholder="Jane Doe"
                                     />
                                     {fieldState.invalid && (
@@ -123,8 +123,7 @@ export default function RegisterPage() {
                                         {...field}
                                         id={field.name}
                                         aria-invalid={fieldState.invalid}
-                                        autoComplete="username"
-                                        placeholder="your_username"
+                                        placeholder="your username"
                                     />
                                     {fieldState.invalid && (
                                         <FieldError
@@ -147,7 +146,6 @@ export default function RegisterPage() {
                                         id={field.name}
                                         type="password"
                                         aria-invalid={fieldState.invalid}
-                                        autoComplete="new-password"
                                         placeholder="••••••••"
                                     />
                                     {fieldState.invalid && (
@@ -163,7 +161,7 @@ export default function RegisterPage() {
                         <Button
                             type="submit"
                             className="w-full"
-                            disabled={loading}
+                            disabled={loading || !form.formState.isValid}
                         >
                             {loading ? "Creating account…" : "Create account"}
                         </Button>
