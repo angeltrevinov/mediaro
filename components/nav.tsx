@@ -1,7 +1,19 @@
 import Link from "next/link";
-import { getCurrentUser } from "@/lib/auth";
+import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
+import { getCurrentUser, deleteSession, clearSessionCookie } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
-import { LogoutButton } from "@/components/logout-button";
+
+async function logout() {
+    "use server";
+    const cookieStore = await cookies();
+    const token = cookieStore.get("session")?.value;
+    if (token) {
+        await deleteSession(token);
+    }
+    await clearSessionCookie();
+    redirect("/login");
+}
 
 export async function Nav() {
     const user = await getCurrentUser();
@@ -17,7 +29,11 @@ export async function Nav() {
                         <span className="text-sm text-muted-foreground">
                             {user.name}
                         </span>
-                        <LogoutButton />
+                        <form action={logout}>
+                            <Button type="submit" variant="outline" size="sm">
+                                Sign out
+                            </Button>
+                        </form>
                     </>
                 ) : (
                     <>
