@@ -159,7 +159,14 @@ export default function AddMoviePage() {
                     {searchResults.totalResults} results found
                 </span>
                 {searchResults.results.map((movie) => (
-                    <Link key={movie.id} href={`/movie/${movie.id}`}>
+                    <Link
+                        key={movie.id}
+                        href={`/movie/${movie.id}?back=${encodeURIComponent(
+                            searchParams.toString()
+                                ? `${pathname}?${searchParams.toString()}`
+                                : pathname
+                        )}`}
+                    >
                         <MediaCard>
                             <MediaCardImage
                                 src={movie.posterPath || ""}
