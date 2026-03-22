@@ -1,3 +1,4 @@
+import { getCurrentUser } from "@/lib/auth";
 import { searchMovies } from "@/lib/tmdb";
 import { NextRequest } from "next/server";
 

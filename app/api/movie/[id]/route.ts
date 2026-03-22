@@ -6,10 +6,6 @@ export async function GET(
     request: NextRequest,
     { params }: { params: Promise<{ id: string }> }
 ) {
-    const user = await getCurrentUser();
-    if (!user) {
-        return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401 });
-    }
 
     const { id } = await params;
     const { searchParams } = request.nextUrl;

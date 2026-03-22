@@ -10,12 +10,20 @@ export function proxy(request: NextRequest) {
                 { status: 401, headers: { "Content-Type": "application/json" } },
             );
         }
-        return NextResponse.redirect(new URL("/", request.url));
+        return NextResponse.redirect(new URL("/login", request.url));
     }
 
     return NextResponse.next();
 }
 
 export const config = {
-    matcher: ["/movie/:path*", "/api/movie/:path*"],
+    matcher: [
+        // API routes
+        "/api/auth/reset-password",
+        "/api/movie/:path*",
+        // Dashboard routes
+        "/movie/:path*",
+        "/settings/:path*", 
+        "/", // Catch-all for other dashboard routes
+    ],
 };

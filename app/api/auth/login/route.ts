@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { createSession, setSessionCookie } from "@/lib/auth";
 import bcrypt from "bcrypt";
 import { z } from "zod";
+import { NextRequest } from "next/server";
 
 const loginSchema = z.object({
     username: z
@@ -15,7 +16,7 @@ const loginSchema = z.object({
         .max(128, "Password must be at most 128 characters"),
 });
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
     let body: unknown;
     try {
         body = await request.json();
