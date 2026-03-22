@@ -96,12 +96,12 @@ export default function SearchMoviePage() {
     }
 
     return (
-        <main className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4">
             {renderSearchInput()}
             <section className="flex flex-col gap-2">
                 {renderMediaSearchResults()}
             </section>
-        </main>
+        </div>
     );
 
     function renderSearchInput() {

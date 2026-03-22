@@ -19,7 +19,7 @@ export async function Nav() {
     const user = await getCurrentUser();
 
     return (
-        <nav className="flex items-center justify-between py-3 mb-4 border-b">
+        <nav className="flex items-center justify-between p-3 mb-4 border-b">
             <Link href="/" className="font-semibold text-lg">
                 Trackarr
             </Link>
