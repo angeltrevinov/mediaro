@@ -4,11 +4,23 @@ import { Movie } from "@/interfaces/movie";
 import { useEffect, useState } from "react";
 import { use } from "react";
 import { useSearchParams } from "next/navigation";
-import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
-import { CalendarIcon, ChevronLeftIcon, ClockIcon, StarIcon } from "lucide-react";
+import { CalendarIcon, ClockIcon, StarIcon } from "lucide-react";
+import {
+    MediaDetails,
+    MediaDetailsBackdrop,
+    MediaDetailsGenre,
+    MediaDetailsGenres,
+    MediaDetailsHeader,
+    MediaDetailsHeaderContent,
+    MediaDetailsHeaderSubtitle,
+    MediaDetailsHeaderTitle,
+    MediaDetailsMeta,
+    MediaDetailsMetaItem,
+    MediaDetailsOverview,
+    MediaDetailsPoster,
+} from "@/components/media-details";
 
 function formatRuntime(minutes: number): string {
     const h = Math.floor(minutes / 60);
@@ -80,122 +92,69 @@ export default function MovieDetailsPage({
     const posterUrl = movie.posterPath ?? null;
 
     return (
-        <div className="flex flex-col gap-4 sm:gap-8">
+        <MediaDetails>
             {/* Backdrop */}
-            <div className="relative w-full h-48 sm:h-72 rounded-xl overflow-hidden bg-muted">
-                {backdropUrl ? (
-                    <img
-                        src={backdropUrl}
-                        alt={`${movie.title} backdrop`}
-                        className="w-full h-full object-cover"
-                    />
-                ) : (
-                    <div className="w-full h-full bg-muted" />
-                )}
-                <div className="absolute inset-0 bg-linear-to-t from-background via-background/40 to-transparent" />
-                {backHref && (
-                    <div className="absolute top-3 left-3">
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            asChild
-                            className="bg-background/70 backdrop-blur-sm hover:bg-background/90"
-                        >
-                            <Link href={backHref}>
-                                <ChevronLeftIcon />
-                                Back
-                            </Link>
-                        </Button>
-                    </div>
-                )}
-            </div>
+            <MediaDetailsBackdrop src={backdropUrl} alt={`${movie.title} backdrop`} backHref={backHref} />
 
             {/* Main content: poster + details */}
-            <div className="relative flex flex-col sm:flex-row gap-4 sm:gap-8 -mt-16 sm:-mt-48 px-2 sm:items-end">
+            <MediaDetailsHeader>
                 {/* Poster */}
-                <div className="shrink-0 mx-auto sm:mx-0">
-                    {posterUrl ? (
-                        <img
-                            src={posterUrl}
-                            alt={`${movie.title} poster`}
-                            className="w-32 h-48 sm:w-44 sm:h-64 rounded-xl shadow-xl border border-border object-cover"
-                        />
-                    ) : (
-                        <div className="w-32 h-48 sm:w-44 sm:h-64 rounded-xl bg-muted border border-border flex items-center justify-center text-muted-foreground text-sm shrink-0">
-                            No image
-                        </div>
-                    )}
-                </div>
+                <MediaDetailsPoster src={posterUrl} alt={`${movie.title} poster`} />
 
                 {/* Title & meta */}
-                <div className="flex flex-col gap-3 sm:pb-1 min-w-0">
+                <MediaDetailsHeaderContent>
                     <div>
-                        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight leading-tight">
+                        <MediaDetailsHeaderTitle>
                             {movie.title}
-                        </h1>
+                        </MediaDetailsHeaderTitle>
                         {movie.originalTitle !== movie.title && (
-                            <p className="text-muted-foreground text-sm mt-0.5">
+                            <MediaDetailsHeaderSubtitle>
                                 {movie.originalTitle}
-                            </p>
+                            </MediaDetailsHeaderSubtitle>
                         )}
                     </div>
 
-                    {/* Genres */}
                     {movie.genres && movie.genres.length > 0 && (
-                        <div className="flex flex-wrap gap-1.5">
+                        <MediaDetailsGenres>
                             {movie.genres.map((genre) => (
-                                <Badge key={genre} variant="secondary">
-                                    {genre}
-                                </Badge>
+                                <MediaDetailsGenre key={genre}>{genre}</MediaDetailsGenre>
                             ))}
-                        </div>
+                        </MediaDetailsGenres>
                     )}
 
-                    {/* Stats row */}
-                    <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+                    <MediaDetailsMeta>
                         {movie.voteAverage !== undefined && (
-                            <span className="flex items-center gap-1">
-                                <StarIcon className="w-4 h-4 text-yellow-500 fill-yellow-500" />
+                            <MediaDetailsMetaItem icon={<StarIcon className="w-4 h-4 text-yellow-500 fill-yellow-500" />}>
                                 <span className="font-medium text-foreground">
                                     {movie.voteAverage.toFixed(1)}
                                 </span>
                                 {movie.voteCount !== undefined && (
-                                    <span>
-                                        ({movie.voteCount.toLocaleString()} votes)
-                                    </span>
+                                    <span>({movie.voteCount.toLocaleString()} votes)</span>
                                 )}
-                            </span>
+                            </MediaDetailsMetaItem>
                         )}
                         {movie.runtime !== undefined && movie.runtime > 0 && (
-                            <span className="flex items-center gap-1">
-                                <ClockIcon className="w-4 h-4" />
+                            <MediaDetailsMetaItem icon={<ClockIcon className="w-4 h-4" />}>
                                 {formatRuntime(movie.runtime)}
-                            </span>
+                            </MediaDetailsMetaItem>
                         )}
                         {movie.releaseDate && (
-                            <span className="flex items-center gap-1">
-                                <CalendarIcon className="w-4 h-4" />
+                            <MediaDetailsMetaItem icon={<CalendarIcon className="w-4 h-4" />}>
                                 {formatReleaseYear(movie.releaseDate)}
-                            </span>
+                            </MediaDetailsMetaItem>
                         )}
                         {movie.status && (
                             <Badge variant="outline">{movie.status}</Badge>
                         )}
-                    </div>
-                </div>
-            </div>
+                    </MediaDetailsMeta>
+                </MediaDetailsHeaderContent>
+            </MediaDetailsHeader>
 
             <Separator />
 
-            {/* Overview */}
             {movie.overview && (
-                <div className="flex flex-col gap-2">
-                    <h2 className="text-lg font-semibold">Overview</h2>
-                    <p className="text-muted-foreground leading-relaxed">
-                        {movie.overview}
-                    </p>
-                </div>
+                <MediaDetailsOverview>{movie.overview}</MediaDetailsOverview>
             )}
-        </div>
+        </MediaDetails>
     );
 }
