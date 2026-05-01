@@ -10,6 +10,17 @@ datasource db {
   provider = "sqlite"
 }
 
+enum MediaType {
+  movie
+}
+
+enum TrackingStatus {
+  watching
+  completed
+  plan_to_watch
+  dropped
+}
+
 model User {
   id            Int      @id @default(autoincrement())
   username      String   @unique
@@ -19,8 +30,8 @@ model User {
   created_at    DateTime @default(now())
   updated_at    DateTime @updatedAt
 
-  movieTrackings MovieTracking[]
-  sessions       Session[]
+  trackings Tracking[]
+  sessions  Session[]
 }
 
 model Session {
@@ -32,33 +43,28 @@ model Session {
   user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
-model Movie {
-  id             Int      @id @unique // TMDB movide ID as primary key
-  title          String
-  original_title String
-  release_date   DateTime
-  poster_path    String
-  backdrop_path  String
-  overview       String
-  runtime        Int
-  genres         Json
-  last_synced    DateTime
-  tracking       MovieTracking[]
+model Media {
+  id           Int        @id @unique // TMDB media ID as primary key
+  external_id  String
+  media_source String
+  media_type   MediaType
+  tracking     Tracking[]
 }
 
-model MovieTracking {
-  id           Int      @id @default(autoincrement())
-  user_id      Int
-  movie_id     Int
-  status       String // 'watching', 'completed', 'plan_to_watch', 'dropped'
-  rating       Int?    // nullable, 1-10
-  watched_date DateTime? // nullable
-  notes        String? // nullable
-  created_at   DateTime @default(now())
-  updated_at   DateTime @updatedAt
+model Tracking {
+  id             Int       @id @default(autoincrement())
+  user_id        Int
+  media_id       Int
+  status         TrackingStatus
+  rating         Int? // nullable, 1-10
+  started_date   DateTime? // nullable
+  completed_date DateTime? // nullable
+  notes          String? // nullable
+  created_at     DateTime  @default(now())
+  updated_at     DateTime  @updatedAt
 
-  user   User  @relation(fields: [user_id], references: [id])
-  movie  Movie @relation(fields: [movie_id], references: [id])
+  user  User  @relation(fields: [user_id], references: [id])
+  media Media @relation(fields: [media_id], references: [id])
 
-  @@unique([user_id, movie_id])
+  @@unique([user_id, media_id])
 }
