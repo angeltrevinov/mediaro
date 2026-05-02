@@ -1,4 +1,4 @@
-import { getCurrentUser } from "@/lib/auth";
+import { getUserFromRequest } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { NextRequest } from "next/server";
 import { z } from "zod";
@@ -30,7 +30,7 @@ export async function PATCH(request: NextRequest) {
     }
     const { name } = result.data;
 
-    const user = await getCurrentUser();
+    const user = getUserFromRequest(request);
     if (!user) {
         return new Response(
             JSON.stringify({ error: "Unauthorized" }),

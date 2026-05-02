@@ -23,7 +23,10 @@ export async function proxy(request: NextRequest) {
         return unauthorized(request);
     }
 
-    return NextResponse.next();
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set("x-user", JSON.stringify(user));
+
+    return NextResponse.next({ request: { headers: requestHeaders } });
 }
 
 export const config = {

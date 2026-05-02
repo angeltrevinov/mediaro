@@ -82,3 +82,13 @@ export async function getCurrentUser() {
     if (!token) return null;
     return validateSession(token);
 }
+
+export function getUserFromRequest(request: { headers: { get(name: string): string | null } }) {
+    const raw = request.headers.get("x-user");
+    if (!raw) return null;
+    try {
+        return JSON.parse(raw) as { id: number; username: string; name: string; role: string };
+    } catch {
+        return null;
+    }
+}

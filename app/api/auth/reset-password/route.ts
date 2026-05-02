@@ -1,4 +1,4 @@
-import { clearSessionCookie, getCurrentUser } from "@/lib/auth";
+import { clearSessionCookie, getUserFromRequest } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcrypt";
 import { NextRequest } from "next/server";
@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
     }
     const { currentPassword, newPassword } = result.data;
 
-    const user = await getCurrentUser();
+    const user = getUserFromRequest(request);
     if (!user) {
         return new Response(
             JSON.stringify({ error: "Unauthorized" }),

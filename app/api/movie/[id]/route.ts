@@ -1,5 +1,4 @@
 import { getMovieDetails } from "@/lib/tmdb";
-import { getCurrentUser } from "@/lib/auth";
 import { NextRequest } from "next/server";
 
 export async function GET(
