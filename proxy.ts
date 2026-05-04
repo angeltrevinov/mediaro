@@ -34,6 +34,7 @@ export const config = {
         // API routes
         "/api/auth/reset-password",
         "/api/movie/:path*",
+        "/api/tracking",
         // Dashboard routes
         "/search/:path*",
         "/movie/:path*",
