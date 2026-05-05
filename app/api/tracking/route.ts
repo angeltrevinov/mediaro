@@ -85,3 +85,26 @@ export async function POST(request: NextRequest) {
         );
     }
 }
+
+export async function GET(request: NextRequest) {
+    const user = getUserFromRequest(request);
+    if (!user) {
+        return new Response(
+            JSON.stringify({ error: "Unauthorized" }),
+            { status: 401 },
+        );
+    }
+
+    try {
+        const trackings = await prisma.tracking.findMany({
+            where: { user_id: user.id },
+            include: { media: true },
+        });
+        return new Response(JSON.stringify(trackings), { status: 200 });
+    } catch (error) {
+        return new Response(
+            JSON.stringify({ error: (error as Error).message }),
+            { status: 500 },
+        );
+    }
+}
