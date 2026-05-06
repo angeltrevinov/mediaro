@@ -15,9 +15,9 @@ const trackingSchema = z.object({
     notes: z.string().optional(),
 });
 export async function POST(request: NextRequest) {
-    let bodyh: unknown;
+    let body: unknown;
     try {
-        bodyh = await request.json();
+        body = await request.json();
     } catch {
         return new Response(
             JSON.stringify({ error: "Invalid or missing JSON body" }),
@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
         );
     }
 
-    const result = trackingSchema.safeParse(bodyh);
+    const result = trackingSchema.safeParse(body);
     if (!result.success) {
         return new Response(
             JSON.stringify({ error: result.error.issues[0].message }),
