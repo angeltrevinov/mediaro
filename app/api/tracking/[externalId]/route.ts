@@ -90,3 +90,35 @@ export async function PATCH(
         );
     }
 }
+
+export async function DELETE(
+    request: NextRequest,
+    { params }: { params: Promise<{ externalId: string }> }
+) {
+    const { externalId } = await params;
+
+    const user = getUserFromRequest(request);
+    if (!user) {
+        return new Response(
+            JSON.stringify({ error: "Unauthorized" }),
+            { status: 401 },
+        );
+    }
+
+    try {
+        const media = await prisma.media.findUnique({ where: { external_id: externalId } });
+        if (!media) {
+            return new Response(JSON.stringify({ error: "Media not found" }), { status: 404 });
+        }
+
+        await prisma.tracking.delete({
+            where: { user_id_media_id: { user_id: user.id, media_id: media.id } },
+        });
+        return new Response(null, { status: 204 });
+    } catch (error) {
+        return new Response(
+            JSON.stringify({ error: (error as Error).message }),
+            { status: 500 },
+        );
+    }
+}
