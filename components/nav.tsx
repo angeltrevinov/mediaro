@@ -26,9 +26,15 @@ export async function Nav() {
             <div className="flex items-center gap-3">
                 {user ? (
                     <>
-                        <span className="text-sm text-muted-foreground">
-                            {user.name}
-                        </span>
+                        <Link href="/search" className="text-sm text-muted-foreground">
+                            search
+                        </Link>
+                        <Link href="/library" className="text-sm text-muted-foreground">
+                            library
+                        </Link>
+                        <Link href="/settings/account" className="text-sm text-muted-foreground">
+                            settings
+                        </Link>
                         <form action={logout}>
                             <Button type="submit" variant="outline" size="sm">
                                 Sign out

@@ -38,6 +38,7 @@ export const config = {
         // Dashboard routes
         "/search/:path*",
         "/movie/:path*",
+        "/library/:path*",
         "/settings/:path*", 
         "/", // Catch-all for other dashboard routes
     ],
