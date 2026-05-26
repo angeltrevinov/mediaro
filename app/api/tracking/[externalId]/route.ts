@@ -80,7 +80,13 @@ export async function PATCH(
 
         const trackingEntry = await prisma.tracking.update({
             where: { user_id_media_id: { user_id: user.id, media_id: media.id } },
-            data: { status, rating, started_date: startedDate, completed_date: completedDate, notes },
+            data: {
+                status,
+                rating: rating ?? null,
+                started_date: startedDate ? new Date(startedDate) : null,
+                completed_date: completedDate ? new Date(completedDate) : null,
+                notes: notes ?? null,
+            },
         });
         return new Response(JSON.stringify(trackingEntry), { status: 200 });
     } catch (error) {

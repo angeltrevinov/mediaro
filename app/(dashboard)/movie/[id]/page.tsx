@@ -21,6 +21,7 @@ import {
     MediaDetailsOverview,
     MediaDetailsPoster,
 } from "@/components/media-details";
+import { TrackingPanel } from "@/components/tracking-panel";
 
 function formatRuntime(minutes: number): string {
     const h = Math.floor(minutes / 60);
@@ -87,19 +88,16 @@ export default function MovieDetailsPage({
             </div>
         );
     }
-
-    const backdropUrl = movie.backdropPath ?? null;
-    const posterUrl = movie.posterPath ?? null;
-
+    
     return (
         <MediaDetails>
             {/* Backdrop */}
-            <MediaDetailsBackdrop src={backdropUrl} alt={`${movie.title} backdrop`} backHref={backHref} />
+            <MediaDetailsBackdrop src={movie.backdropPath ?? null} alt={`${movie.title} backdrop`} backHref={backHref} />
 
             {/* Main content: poster + details */}
             <MediaDetailsHeader>
                 {/* Poster */}
-                <MediaDetailsPoster src={posterUrl} alt={`${movie.title} poster`} />
+                <MediaDetailsPoster src={movie.posterPath ?? null} alt={`${movie.title} poster`} />
 
                 {/* Title & meta */}
                 <MediaDetailsHeaderContent>
@@ -152,9 +150,17 @@ export default function MovieDetailsPage({
 
             <Separator />
 
-            {movie.overview && (
-                <MediaDetailsOverview>{movie.overview}</MediaDetailsOverview>
-            )}
+            <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-6 items-start">
+                <div className="rounded-xl border bg-card p-4 order-2 lg:order-1">
+                    <TrackingPanel externalId={movie.id.toString()} />
+                </div>
+
+                <div className="order-1 lg:order-2">
+                    {movie.overview && (
+                        <MediaDetailsOverview>{movie.overview}</MediaDetailsOverview>
+                    )}
+                </div>
+            </div>
         </MediaDetails>
     );
 }
