@@ -1,7 +1,6 @@
 "use client";
 
 import { TrackingStatus } from "@/generated/prisma/browser";
-import { Movie } from "@/interfaces/movie";
 import { Badge } from "@/components/ui/badge";
 import {
     Table,
@@ -20,14 +19,13 @@ export type TrackingItem = {
     completed_date: string | null;
     media: {
         external_id: string;
-        media_source: string;
         media_type: string;
+        title: string | null;
+        poster_path: string | null;
     };
 };
 
-export type EnrichedTrackingItem = TrackingItem & {
-    movie: Pick<Movie, "title" | "posterPath"> | null;
-};
+export type EnrichedTrackingItem = TrackingItem;
 
 const STATUS_LABELS: Record<TrackingStatus, string> = {
     plan_to_watch: "Plan to Watch",
@@ -60,7 +58,7 @@ export function LibraryTablePoster({ src, alt, size = "sm" }: LibraryTablePoster
             />
         );
     }
-    return <div className={cls.replace("object-cover", "bg-muted")} />;
+    return <div className={`${size === "lg" ? "w-12 h-18" : "w-8 h-12"} rounded bg-muted shrink-0`} />;
 }
 
 // --- Row ---
@@ -75,12 +73,12 @@ export function LibraryTableRow({ item, onClick }: LibraryTableRowProps) {
         <TableRow className="cursor-pointer" onClick={onClick}>
             <TableCell>
                 <LibraryTablePoster
-                    src={item.movie?.posterPath ?? null}
-                    alt={item.movie?.title ?? item.media.external_id}
+                    src={item.media.poster_path}
+                    alt={item.media.title ?? item.media.external_id}
                 />
             </TableCell>
             <TableCell className="font-medium">
-                {item.movie?.title ?? item.media.external_id}
+                {item.media.title ?? item.media.external_id}
             </TableCell>
             <TableCell>
                 <Badge variant="secondary">{STATUS_LABELS[item.status]}</Badge>
@@ -106,13 +104,13 @@ export function LibraryCard({ item, onClick }: LibraryCardProps) {
             onClick={onClick}
         >
             <LibraryTablePoster
-                src={item.movie?.posterPath ?? null}
-                alt={item.movie?.title ?? item.media.external_id}
+                src={item.media.poster_path}
+                alt={item.media.title ?? item.media.external_id}
                 size="lg"
             />
             <div className="flex flex-col gap-1.5 min-w-0 justify-center">
                 <p className="font-medium leading-tight truncate">
-                    {item.movie?.title ?? item.media.external_id}
+                    {item.media.title ?? item.media.external_id}
                 </p>
                 <Badge variant="secondary" className="w-fit">
                     {STATUS_LABELS[item.status]}

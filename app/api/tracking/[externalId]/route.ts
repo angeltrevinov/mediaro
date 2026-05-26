@@ -33,6 +33,8 @@ export async function GET(
 }
 
 const trackingSchema = z.object({
+    title: z.string().optional(),
+    posterPath: z.string().optional(),
     status: z.enum(TrackingStatus),
     rating: z.number().min(0, "Rating must be at least 0").max(10, "Rating must be at most 10").optional(),
     startedDate: z.string().optional(),
@@ -62,7 +64,7 @@ export async function PATCH(
             { status: 400 },
         );
     }
-    const { status, rating, startedDate, completedDate, notes } = result.data;
+    const { title, posterPath, status, rating, startedDate, completedDate, notes } = result.data;
 
     const user = getUserFromRequest(request);
     if (!user) {
@@ -76,6 +78,13 @@ export async function PATCH(
         const media = await prisma.media.findUnique({ where: { external_id: externalId } });
         if (!media) {
             return new Response(JSON.stringify({ error: "Media not found" }), { status: 404 });
+        }
+
+        if (title || posterPath) {
+            await prisma.media.update({
+                where: { external_id: externalId },
+                data: { title: title ?? media.title, poster_path: posterPath ?? media.poster_path },
+            });
         }
 
         const trackingEntry = await prisma.tracking.update({

@@ -152,7 +152,11 @@ export default function MovieDetailsPage({
 
             <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-6 items-start">
                 <div className="rounded-xl border bg-card p-4 order-2 lg:order-1">
-                    <TrackingPanel externalId={movie.id.toString()} />
+                    <TrackingPanel
+                        externalId={movie.id.toString()}
+                        title={movie.title}
+                        posterPath={movie.posterPath}
+                    />
                 </div>
 
                 <div className="order-1 lg:order-2">

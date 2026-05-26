@@ -2,13 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Movie } from "@/interfaces/movie";
-import {
-    EnrichedTrackingItem,
-    LibraryTable,
-    LibraryTableEmpty,
-    TrackingItem,
-} from "@/components/library-table";
+import { EnrichedTrackingItem, LibraryTable, LibraryTableEmpty } from "@/components/library-table";
 
 export default function LibraryPage() {
     const router = useRouter();
@@ -20,23 +14,38 @@ export default function LibraryPage() {
             try {
                 const res = await fetch("/api/tracking");
                 if (!res.ok) return;
-                const trackings = (await res.json()) as TrackingItem[];
+                const raw = (await res.json()) as EnrichedTrackingItem[];
 
-                const enriched = await Promise.all(
-                    trackings.map(async (t) => {
-                        try {
-                            const movieRes = await fetch(`/api/movie/${t.media.external_id}`);
-                            const movie = movieRes.ok
-                                ? (await movieRes.json()) as Pick<Movie, "title" | "posterPath">
-                                : null;
-                            return { ...t, movie };
-                        } catch {
-                            return { ...t, movie: null };
-                        }
-                    })
-                );
-
-                setItems(enriched);
+                // Backfill display metadata for entries that pre-date the schema change
+                const needsEnrich = raw.filter((item) => !item.media.title);
+                if (needsEnrich.length > 0) {
+                    const enriched = await Promise.all(
+                        needsEnrich.map(async (item) => {
+                            try {
+                                const movieRes = await fetch(`/api/movie/${item.media.external_id}`);
+                                if (!movieRes.ok) return item;
+                                const movie = await movieRes.json();
+                                return {
+                                    ...item,
+                                    media: {
+                                        ...item.media,
+                                        title: movie.title ?? item.media.title,
+                                        poster_path: movie.posterPath ?? item.media.poster_path,
+                                    },
+                                } satisfies EnrichedTrackingItem;
+                            } catch {
+                                return item;
+                            }
+                        })
+                    );
+                    const enrichedIds = new Set(enriched.map((e) => e.id));
+                    setItems([
+                        ...raw.filter((item) => !enrichedIds.has(item.id)),
+                        ...enriched,
+                    ]);
+                } else {
+                    setItems(raw);
+                }
             } finally {
                 setLoading(false);
             }
@@ -68,4 +77,5 @@ export default function LibraryPage() {
         </div>
     );
 }
+
 

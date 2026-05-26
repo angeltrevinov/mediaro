@@ -48,6 +48,8 @@ model Media {
   external_id  String     @unique // Original external ID from the source (e.g., TMDB ID as string)
   media_source String
   media_type   MediaType
+  title        String?
+  poster_path  String?
   tracking     Tracking[]
 }
 

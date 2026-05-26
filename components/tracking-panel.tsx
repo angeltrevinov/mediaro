@@ -17,9 +17,11 @@ import {
 
 type TrackingPanelProps = {
     externalId: string;
+    title?: string;
+    posterPath?: string | null;
 };
 
-export function TrackingPanel({ externalId }: TrackingPanelProps) {
+export function TrackingPanel({ externalId, title, posterPath }: TrackingPanelProps) {
     const [tracking, setTracking] = useState<TrackingData | null>(null);
     const [loaded, setLoaded] = useState(false);
     const [deleting, setDeleting] = useState(false);
@@ -91,6 +93,8 @@ export function TrackingPanel({ externalId }: TrackingPanelProps) {
             {loaded ? (
                 <MediaForm
                     externalId={externalId}
+                    title={title}
+                    posterPath={posterPath}
                     tracking={tracking ?? undefined}
                     onSuccess={fetchTracking}
                 />

@@ -8,6 +8,8 @@ const trackingSchema = z.object({
     externalId: z.string().min(1, "External ID is required"),
     mediaSource: z.string().min(1, "Media source is required"),
     mediaType: z.enum(MediaType),
+    title: z.string().optional(),
+    posterPath: z.string().optional(),
     status: z.enum(TrackingStatus),
     rating: z.number().min(0, "Rating must be at least 0").max(10, "Rating must be at most 10").optional(),
     startedDate: z.string().optional(),
@@ -32,7 +34,7 @@ export async function POST(request: NextRequest) {
             { status: 400 },
         );
     }
-    const { externalId, mediaSource, mediaType, status, rating, startedDate, completedDate, notes } = result.data;
+    const { externalId, mediaSource, mediaType, title, posterPath, status, rating, startedDate, completedDate, notes } = result.data;
 
     const user = getUserFromRequest(request);
     console.log("Authenticated user:", user);
@@ -51,7 +53,14 @@ export async function POST(request: NextRequest) {
                     external_id: externalId,
                     media_source: mediaSource,
                     media_type: mediaType,
+                    title: title ?? null,
+                    poster_path: posterPath ?? null,
                 },
+            });
+        } else if (title || posterPath) {
+            media = await prisma.media.update({
+                where: { external_id: externalId },
+                data: { title: title ?? media.title, poster_path: posterPath ?? media.poster_path },
             });
         }
 
