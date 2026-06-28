@@ -2,6 +2,11 @@
 
 This document defines the exact setup needed to run Trackarr locally and start Contribution Module development.
 
+## Related Documentation
+
+- Project structure and architecture:
+	- [docs/project-structure.md](../project-structure.md)
+
 ## Prerequisites
 
 - Node.js 20+

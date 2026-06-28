@@ -8,6 +8,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { routes } from "@/lib/routes";
+import { resetPassword } from "@/lib/services/client/auth-service";
 
 const resetPasswordSchema = z.object({
     currentPassword: z.string().min(6, "Current password must be at least 6 characters").max(128, "Current password must be at most 128 characters"),
@@ -37,23 +39,18 @@ export function ResetPasswordForm() {
         setServerError(null);
         setLoading(true);
         try {
-            const response = await fetch("/api/auth/reset-password", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    currentPassword: data.currentPassword,
-                    newPassword: data.newPassword,
-                }),
+            await resetPassword({
+                currentPassword: data.currentPassword,
+                newPassword: data.newPassword,
             });
-            if (response.ok) {
-                router.refresh();
-                router.push("/login");
-            } else {
-                const body = await response.json();
-                setServerError(body.error ?? "Password reset failed. Please try again.");
-            }
-        } catch {
-            setServerError("An unexpected error occurred. Please try again.");
+            router.refresh();
+            router.push(routes.auth.login);
+        } catch (error) {
+            setServerError(
+                error instanceof Error
+                    ? error.message
+                    : "An unexpected error occurred. Please try again."
+            );
         } finally {
             setLoading(false);
         }

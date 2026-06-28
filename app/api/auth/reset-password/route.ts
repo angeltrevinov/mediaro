@@ -1,6 +1,6 @@
 import { clearSessionCookie, getUserFromRequest } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
-import bcrypt from "bcrypt";
+import { errorResponse, jsonResponse, parseJsonBody } from "@/lib/api-route-helpers";
+import { resetUserPassword } from "@/lib/services/server/auth-service";
 import { NextRequest } from "next/server";
 import { z } from "zod";
 
@@ -10,66 +10,30 @@ const resetPasswordSchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
-    let body: unknown;
-    try {
-        body = await request.json();
-    } catch {
-        return new Response(
-            JSON.stringify({ error: "Invalid or missing JSON body" }),
-            { status: 400 },
-        );
+    const parsed = await parseJsonBody(request, resetPasswordSchema);
+    if ("response" in parsed) {
+        return parsed.response;
     }
-
-    const result = resetPasswordSchema.safeParse(body);
-    if (!result.success) {
-        return new Response(
-            JSON.stringify({ error: result.error.issues[0].message }),
-            { status: 400 },
-        );
-    }
-    const { currentPassword, newPassword } = result.data;
+    const { currentPassword, newPassword } = parsed.data;
 
     const user = getUserFromRequest(request);
     if (!user) {
-        return new Response(
-            JSON.stringify({ error: "Unauthorized" }),
-            { status: 401 },
-        );
+        return errorResponse("Unauthorized", 401);
     }
 
-    const fullUser = await prisma.user.findUnique({
-        where: { id: user.id },
+    const result = await resetUserPassword({
+        userId: user.id,
+        currentPassword,
+        newPassword,
     });
-    if (!fullUser) {
-        return new Response(
-            JSON.stringify({ error: "User not found" }),
-            { status: 404 },
-        );
+    if (!result.ok) {
+        if (result.error === "User not found") {
+            return errorResponse(result.error, 404);
+        }
+        return errorResponse(result.error, 401);
     }
 
-    const isPasswordValid = await bcrypt.compare(currentPassword, fullUser.password_hash);
-    if (!isPasswordValid) {
-        return new Response(
-            JSON.stringify({ error: "Current password is incorrect" }),
-            { status: 401 },
-        );
-    }
-
-    const newPasswordHash = await bcrypt.hash(newPassword, 12);
-
-    await prisma.user.update({
-        where: { id: user.id },
-        data: { password_hash: newPasswordHash },
-    });
-
-    // Invalidate all sessions for this user and clear the cookie
-    await prisma.session.deleteMany({
-        where: { user_id: user.id },
-    });
     await clearSessionCookie();
 
-    return new Response(
-        JSON.stringify({ message: "Password updated successfully" }),
-        { status: 200 },
-    );
+    return jsonResponse({ message: "Password updated successfully" });
 }

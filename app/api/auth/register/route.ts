@@ -1,6 +1,6 @@
-import { prisma } from "@/lib/prisma";
 import { createSession, setSessionCookie } from "@/lib/auth";
-import bcrypt from "bcrypt";
+import { errorResponse, jsonResponse, parseJsonBody } from "@/lib/api-route-helpers";
+import { registerUser } from "@/lib/services/server/auth-service";
 import { z } from "zod";
 import { NextRequest } from "next/server";
 
@@ -21,60 +21,20 @@ const registerSchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
-    let body: unknown;
-    try {
-        body = await request.json();
-    } catch {
-        return new Response(
-            JSON.stringify({ error: "Invalid or missing JSON body" }),
-            { status: 400 },
-        );
+    const parsed = await parseJsonBody(request, registerSchema);
+    if ("response" in parsed) {
+        return parsed.response;
     }
 
-    const result = registerSchema.safeParse(body);
-    if (!result.success) {
-        return new Response(
-            JSON.stringify({ error: result.error.issues[0].message }),
-            { status: 400 },
-        );
-    }
-    const { username, name, password } = result.data;
-    
-    const existingUser = await prisma.user.findUnique({
-        where: { username },
-    });
-    if (existingUser) {
-        return new Response(
-            JSON.stringify({ error: "Username already taken" }),
-            { status: 409 },
-        );
+    const { username, name, password } = parsed.data;
+
+    const result = await registerUser({ username, name, password });
+    if (!result.ok) {
+        return errorResponse(result.error, 409);
     }
 
-    // hash the password with bcrypt
-    const passwordHash = await bcrypt.hash(password, 12);
-
-    // First registered user becomes admin
-    const userCount = await prisma.user.count();
-    const role = userCount === 0 ? "admin" : "user";
-
-    const user = await prisma.user.create({
-        data: {
-            username,
-            name,
-            password_hash: passwordHash,
-            role,
-        },
-        select: {
-            id: true,
-            username: true,
-            name: true,
-            role: true,
-            created_at: true,
-        },
-    });
-
-    const token = await createSession(user.id);
+    const token = await createSession(result.user.id);
     await setSessionCookie(token);
 
-    return new Response(JSON.stringify(user), { status: 201 });
+    return jsonResponse(result.user, 201);
 }

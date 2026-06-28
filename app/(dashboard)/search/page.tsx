@@ -18,18 +18,14 @@ import { useMediaSearch, type PaginatedResult } from "@/hooks/use-media-search";
 import { type Movie } from "@/interfaces/movie";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
+import { searchMovies } from "@/lib/services/client/movie-service";
 
 async function fetchMovies(query: string, page: number): Promise<PaginatedResult<Movie>> {
-    const response = await fetch(
-        `/api/movie/search?query=${encodeURIComponent(query)}&page=${page}`,
-    );
-    if (!response.ok) {
-        throw new Error(`Error searching movies: ${response.statusText}`);
-    }
-    return response.json() as Promise<PaginatedResult<Movie>>;
+    return searchMovies(query, page);
 }
 
-export default function SearchMoviePage() {
+function SearchMoviePageContent() {
     const searchParams = useSearchParams();
     const pathname = usePathname();
 
@@ -87,5 +83,13 @@ export default function SearchMoviePage() {
                 )}
             </section>
         </div>
+    );
+}
+
+export default function SearchMoviePage() {
+    return (
+        <Suspense fallback={<MediaSearchLoading />}>
+            <SearchMoviePageContent />
+        </Suspense>
     );
 }

@@ -1,6 +1,11 @@
 import { TrackingStatus } from "@/generated/prisma/enums";
-import { getUserFromRequest } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
+import { requireUserFromRequest } from "@/lib/auth";
+import { errorResponse, jsonResponse, parseJsonBody } from "@/lib/api-route-helpers";
+import {
+    deleteTrackingEntry,
+    getTrackingByExternalId,
+    updateTrackingEntry,
+} from "@/lib/services/server/tracking-service";
 import { NextRequest } from "next/server";
 import z from "zod";
 
@@ -10,25 +15,16 @@ export async function GET(
 ) {
     const { externalId } = await params;
 
-    const user = getUserFromRequest(request);
-    if (!user) {
-        return new Response(
-            JSON.stringify({ error: "Unauthorized" }),
-            { status: 401 },
-        );
+    const auth = requireUserFromRequest(request);
+    if ("response" in auth) {
+        return auth.response;
     }
 
     try {
-        const trackingEntry = await prisma.tracking.findFirst({
-            where: { user_id: user.id, media: { external_id: externalId } },
-            include: { media: true },
-        });
-        return new Response(JSON.stringify(trackingEntry), { status: 200 });
+        const trackingEntry = await getTrackingByExternalId(auth.user.id, externalId);
+        return jsonResponse(trackingEntry);
     } catch (error) {
-        return new Response(
-            JSON.stringify({ error: (error as Error).message }),
-            { status: 500 },
-        );
+        return errorResponse((error as Error).message, 500);
     }
 }
 
@@ -47,62 +43,37 @@ export async function PATCH(
 ) {
     const { externalId } = await params;
 
-    let body: unknown;
-    try {
-        body = await request.json();
-    } catch {
-        return new Response(
-            JSON.stringify({ error: "Invalid or missing JSON body" }),
-            { status: 400 },
-        );
+    const parsed = await parseJsonBody(request, trackingSchema);
+    if ("response" in parsed) {
+        return parsed.response;
     }
+    const { title, posterPath, status, rating, startedDate, completedDate, notes } = parsed.data;
 
-    const result = trackingSchema.safeParse(body);
-    if (!result.success) {
-        return new Response(
-            JSON.stringify({ error: result.error.issues[0].message }),
-            { status: 400 },
-        );
-    }
-    const { title, posterPath, status, rating, startedDate, completedDate, notes } = result.data;
-
-    const user = getUserFromRequest(request);
-    if (!user) {
-        return new Response(
-            JSON.stringify({ error: "Unauthorized" }),
-            { status: 401 },
-        );
+    const auth = requireUserFromRequest(request);
+    if ("response" in auth) {
+        return auth.response;
     }
 
     try {
-        const media = await prisma.media.findUnique({ where: { external_id: externalId } });
-        if (!media) {
-            return new Response(JSON.stringify({ error: "Media not found" }), { status: 404 });
-        }
-
-        if (title || posterPath) {
-            await prisma.media.update({
-                where: { external_id: externalId },
-                data: { title: title ?? media.title, poster_path: posterPath ?? media.poster_path },
-            });
-        }
-
-        const trackingEntry = await prisma.tracking.update({
-            where: { user_id_media_id: { user_id: user.id, media_id: media.id } },
-            data: {
-                status,
-                rating: rating ?? null,
-                started_date: startedDate ? new Date(startedDate) : null,
-                completed_date: completedDate ? new Date(completedDate) : null,
-                notes: notes ?? null,
-            },
+        const result = await updateTrackingEntry({
+            userId: auth.user.id,
+            externalId,
+            title,
+            posterPath,
+            status,
+            rating,
+            startedDate,
+            completedDate,
+            notes,
         });
-        return new Response(JSON.stringify(trackingEntry), { status: 200 });
+
+        if (!result.ok) {
+            return errorResponse(result.error, 404);
+        }
+
+        return jsonResponse(result.tracking);
     } catch (error) {
-        return new Response(
-            JSON.stringify({ error: (error as Error).message }),
-            { status: 500 },
-        );
+        return errorResponse((error as Error).message, 500);
     }
 }
 
@@ -112,28 +83,18 @@ export async function DELETE(
 ) {
     const { externalId } = await params;
 
-    const user = getUserFromRequest(request);
-    if (!user) {
-        return new Response(
-            JSON.stringify({ error: "Unauthorized" }),
-            { status: 401 },
-        );
+    const auth = requireUserFromRequest(request);
+    if ("response" in auth) {
+        return auth.response;
     }
 
     try {
-        const media = await prisma.media.findUnique({ where: { external_id: externalId } });
-        if (!media) {
-            return new Response(JSON.stringify({ error: "Media not found" }), { status: 404 });
+        const result = await deleteTrackingEntry(auth.user.id, externalId);
+        if (!result.ok) {
+            return errorResponse(result.error, 404);
         }
-
-        await prisma.tracking.delete({
-            where: { user_id_media_id: { user_id: user.id, media_id: media.id } },
-        });
         return new Response(null, { status: 204 });
     } catch (error) {
-        return new Response(
-            JSON.stringify({ error: (error as Error).message }),
-            { status: 500 },
-        );
+        return errorResponse((error as Error).message, 500);
     }
 }

@@ -3,7 +3,7 @@ import { ChevronLeftIcon } from "lucide-react";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 
-export function MediaDetails({children}: React.PropsWithChildren<{}>) {
+export function MediaDetails({children}: React.PropsWithChildren) {
     return (
         <div className="flex flex-col gap-4">
             {children}
@@ -48,7 +48,7 @@ export function MediaDetailsBackdrop({ src, alt, backHref }: MediaDetailsBackdro
     );
 }
 
-export function MediaDetailsHeader({ children }: React.PropsWithChildren<{}>) {
+export function MediaDetailsHeader({ children }: React.PropsWithChildren) {
     return (
         <div className="relative flex flex-col sm:flex-row gap-4 sm:gap-8 -mt-16 sm:-mt-48 px-2 sm:items-end">
             {children}
@@ -77,7 +77,7 @@ export function MediaDetailsPoster({ src, alt }: MediaDetailsPosterProps) {
     );
 }
 
-export function MediaDetailsHeaderContent({ children }: React.PropsWithChildren<{}>) {
+export function MediaDetailsHeaderContent({ children }: React.PropsWithChildren) {
     return (
         <div className="flex flex-col gap-3 sm:pb-1 min-w-0">
             {children}
@@ -85,7 +85,7 @@ export function MediaDetailsHeaderContent({ children }: React.PropsWithChildren<
     );
 }
 
-export function MediaDetailsHeaderTitle({ children }: React.PropsWithChildren<{}>) {
+export function MediaDetailsHeaderTitle({ children }: React.PropsWithChildren) {
     return (
         <h1 className="text-2xl sm:text-3xl font-bold tracking-tight leading-tight">
             {children}
@@ -93,7 +93,7 @@ export function MediaDetailsHeaderTitle({ children }: React.PropsWithChildren<{}
     );
 }
 
-export function MediaDetailsHeaderSubtitle({ children }: React.PropsWithChildren<{}>) {
+export function MediaDetailsHeaderSubtitle({ children }: React.PropsWithChildren) {
     return (
         <div className="text-muted-foreground text-sm mt-0.5">
             {children}
@@ -101,7 +101,7 @@ export function MediaDetailsHeaderSubtitle({ children }: React.PropsWithChildren
     );
 }
 
-export function MediaDetailsGenres({ children }: React.PropsWithChildren<{}>) {
+export function MediaDetailsGenres({ children }: React.PropsWithChildren) {
     return (
         <div className="flex flex-wrap gap-1.5">
             {children}
@@ -109,13 +109,13 @@ export function MediaDetailsGenres({ children }: React.PropsWithChildren<{}>) {
     );
 }
 
-export function MediaDetailsGenre({ children }: React.PropsWithChildren<{}>) {
+export function MediaDetailsGenre({ children }: React.PropsWithChildren) {
     return (
         <Badge variant="secondary">{children}</Badge>
     );
 }
 
-export function MediaDetailsMeta({ children }: React.PropsWithChildren<{}>) {
+export function MediaDetailsMeta({ children }: React.PropsWithChildren) {
     return (
         <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
             {children}
@@ -136,7 +136,7 @@ export function MediaDetailsMetaItem({ icon, children }: MediaDetailsMetaItemPro
     );
 }
 
-export function MediaDetailsSection({ children }: React.PropsWithChildren<{}>) {
+export function MediaDetailsSection({ children }: React.PropsWithChildren) {
     return (
         <div className="flex flex-col gap-2">
             {children}
@@ -144,13 +144,13 @@ export function MediaDetailsSection({ children }: React.PropsWithChildren<{}>) {
     );
 }
 
-export function MediaDetailsSectionTitle({ children }: React.PropsWithChildren<{}>) {
+export function MediaDetailsSectionTitle({ children }: React.PropsWithChildren) {
     return (
         <h2 className="text-lg font-semibold">{children}</h2>
     );
 }
 
-export function MediaDetailsOverview({ children }: React.PropsWithChildren<{}>) {
+export function MediaDetailsOverview({ children }: React.PropsWithChildren) {
     return (
         <MediaDetailsSection>
             <MediaDetailsSectionTitle>Overview</MediaDetailsSectionTitle>

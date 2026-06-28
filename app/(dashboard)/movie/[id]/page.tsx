@@ -22,6 +22,7 @@ import {
     MediaDetailsPoster,
 } from "@/components/media-details";
 import { TrackingPanel } from "@/components/tracking-panel";
+import { getMovieDetails } from "@/lib/services/client/movie-service";
 
 function formatRuntime(minutes: number): string {
     const h = Math.floor(minutes / 60);
@@ -57,13 +58,7 @@ export default function MovieDetailsPage({
     async function fetchMovieDetails(movieId: string) {
         setLoading(true);
         try {
-            const response = await fetch(`/api/movie/${movieId}`);
-            if (!response.ok) {
-                throw new Error(
-                    `Error fetching movie details: ${response.statusText}`,
-                );
-            }
-            const movieDetails = (await response.json()) as Movie;
+            const movieDetails = (await getMovieDetails(movieId)) as Movie;
             setMovie(movieDetails);
         } catch (error) {
             console.error(error);

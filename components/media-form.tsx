@@ -15,6 +15,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "./ui/select";
+import { createTracking, updateTracking } from "@/lib/services/client/tracking-service";
 
 export type TrackingData = {
     status: TrackingStatus;
@@ -97,7 +98,7 @@ export function MediaForm({ externalId, title, posterPath, tracking, onSuccess }
     } = form;
 
     async function onSubmit(data: TrackingFormValues) {
-        const body = {
+        const payload = {
             ...data,
             rating: data.rating ?? undefined,
             startedDate: data.startedDate || undefined,
@@ -105,21 +106,24 @@ export function MediaForm({ externalId, title, posterPath, tracking, onSuccess }
             notes: data.notes || undefined,
         };
 
-        const url = isEdit ? `/api/tracking/${externalId}` : `/api/tracking`;
-        const method = isEdit ? "PATCH" : "POST";
-
-        const response = await fetch(url, {
-            method,
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(body),
-        });
-
-        if (response.ok) {
+        try {
+            if (isEdit) {
+                await updateTracking(externalId, {
+                    title: payload.title,
+                    posterPath: payload.posterPath,
+                    status: payload.status,
+                    rating: payload.rating,
+                    startedDate: payload.startedDate,
+                    completedDate: payload.completedDate,
+                    notes: payload.notes,
+                });
+            } else {
+                await createTracking(payload);
+            }
             onSuccess?.();
-        } else {
-            const errorData = await response.json() as { error?: string };
+        } catch (error) {
             form.setError("root", {
-                message: errorData.error ?? "Something went wrong",
+                message: error instanceof Error ? error.message : "Something went wrong",
             });
         }
     }

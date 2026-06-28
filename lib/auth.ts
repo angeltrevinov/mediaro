@@ -4,6 +4,13 @@ import { cookies } from "next/headers";
 const SESSION_COOKIE = "session";
 const SESSION_MAX_AGE = 60 * 60 * 24 * 7; // 7 days in seconds
 
+export type RequestUser = {
+    id: number;
+    username: string;
+    name: string;
+    role: string;
+};
+
 function sessionCookieOptions() {
     return {
         httpOnly: true,
@@ -87,8 +94,17 @@ export function getUserFromRequest(request: { headers: { get(name: string): stri
     const raw = request.headers.get("x-user");
     if (!raw) return null;
     try {
-        return JSON.parse(raw) as { id: number; username: string; name: string; role: string };
+        return JSON.parse(raw) as RequestUser;
     } catch {
         return null;
     }
+}
+
+export function requireUserFromRequest(request: { headers: { get(name: string): string | null } }) {
+    const user = getUserFromRequest(request);
+    if (!user) {
+        return { response: new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401 }) };
+    }
+
+    return { user };
 }

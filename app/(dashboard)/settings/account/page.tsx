@@ -3,10 +3,11 @@ import { getCurrentUser } from "@/lib/auth";
 import { Separator } from "@/components/ui/separator";
 import { AccountForm } from "./account-form";
 import { ResetPasswordForm } from "./reset-password";
+import { routes } from "@/lib/routes";
 
 export default async function AccountSettingsPage() {
     const user = await getCurrentUser();
-    if (!user) redirect("/login");
+    if (!user) redirect(routes.auth.login);
 
     return (
         <div className="flex flex-col gap-4">

@@ -1,57 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { EnrichedTrackingItem, LibraryTable, LibraryTableEmpty } from "@/components/library-table";
+import { LibraryTable, LibraryTableEmpty } from "@/components/library-table";
+import { useLibraryItems } from "@/hooks/use-library-items";
 
 export default function LibraryPage() {
     const router = useRouter();
-    const [items, setItems] = useState<EnrichedTrackingItem[]>([]);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        async function load() {
-            try {
-                const res = await fetch("/api/tracking");
-                if (!res.ok) return;
-                const raw = (await res.json()) as EnrichedTrackingItem[];
-
-                // Backfill display metadata for entries that pre-date the schema change
-                const needsEnrich = raw.filter((item) => !item.media.title);
-                if (needsEnrich.length > 0) {
-                    const enriched = await Promise.all(
-                        needsEnrich.map(async (item) => {
-                            try {
-                                const movieRes = await fetch(`/api/movie/${item.media.external_id}`);
-                                if (!movieRes.ok) return item;
-                                const movie = await movieRes.json();
-                                return {
-                                    ...item,
-                                    media: {
-                                        ...item.media,
-                                        title: movie.title ?? item.media.title,
-                                        poster_path: movie.posterPath ?? item.media.poster_path,
-                                    },
-                                } satisfies EnrichedTrackingItem;
-                            } catch {
-                                return item;
-                            }
-                        })
-                    );
-                    const enrichedIds = new Set(enriched.map((e) => e.id));
-                    setItems([
-                        ...raw.filter((item) => !enrichedIds.has(item.id)),
-                        ...enriched,
-                    ]);
-                } else {
-                    setItems(raw);
-                }
-            } finally {
-                setLoading(false);
-            }
-        }
-        load();
-    }, []);
+    const { items, loading } = useLibraryItems();
 
     if (loading) {
         return (

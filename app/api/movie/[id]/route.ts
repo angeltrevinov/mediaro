@@ -1,4 +1,5 @@
-import { getMovieDetails } from "@/lib/tmdb";
+import { getMovieDetailsService } from "@/lib/services/server/movie-service";
+import { errorResponse, jsonResponse } from "@/lib/api-route-helpers";
 import { NextRequest } from "next/server";
 
 export async function GET(
@@ -11,9 +12,9 @@ export async function GET(
     const language = searchParams.get("language") || "en-US";
 
     try {
-        const movie = await getMovieDetails(id, language);
-        return new Response(JSON.stringify(movie));
+        const movie = await getMovieDetailsService(id, language);
+        return jsonResponse(movie);
     } catch (error) {
-        return new Response(JSON.stringify({ error: (error as Error).message }), { status: 500 });
+        return errorResponse((error as Error).message, 500);
     }
 }

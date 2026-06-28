@@ -1,11 +1,12 @@
-import { Button } from "@/components/ui/button";
-import Image from "next/image";
-import Link from "next/link";
+import { redirect } from "next/navigation";
+import { getCurrentUser } from "@/lib/auth";
+import { routes } from "@/lib/routes";
 
-export default function Home() {
-  return (
-      <main>
-        <Link href="/search">Search Movies</Link>
-      </main>
-  );
+export default async function Home() {
+    const user = await getCurrentUser();
+    if (user) {
+        redirect(routes.dashboard.library);
+    } else {
+        redirect(routes.auth.login);
+    }
 }

@@ -1,6 +1,10 @@
-import { getUserFromRequest } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
+import { requireUserFromRequest } from "@/lib/auth";
+import { errorResponse, jsonResponse, parseJsonBody } from "@/lib/api-route-helpers";
 import { MediaType, TrackingStatus } from "@/generated/prisma/enums";
+import {
+    createTrackingEntry,
+    listTrackingForUser,
+} from "@/lib/services/server/tracking-service";
 import { NextRequest } from "next/server";
 import { z } from "zod";
 
@@ -16,104 +20,54 @@ const trackingSchema = z.object({
     completedDate: z.string().optional(),
     notes: z.string().optional(),
 });
+
 export async function POST(request: NextRequest) {
-    let body: unknown;
-    try {
-        body = await request.json();
-    } catch {
-        return new Response(
-            JSON.stringify({ error: "Invalid or missing JSON body" }),
-            { status: 400 },
-        );
+    const parsed = await parseJsonBody(request, trackingSchema);
+    if ("response" in parsed) {
+        return parsed.response;
     }
+    const { externalId, mediaSource, mediaType, title, posterPath, status, rating, startedDate, completedDate, notes } = parsed.data;
 
-    const result = trackingSchema.safeParse(body);
-    if (!result.success) {
-        return new Response(
-            JSON.stringify({ error: result.error.issues[0].message }),
-            { status: 400 },
-        );
-    }
-    const { externalId, mediaSource, mediaType, title, posterPath, status, rating, startedDate, completedDate, notes } = result.data;
-
-    const user = getUserFromRequest(request);
-    console.log("Authenticated user:", user);
-    if (!user) {
-        return new Response(
-            JSON.stringify({ error: "Unauthorized" }),
-            { status: 401 },
-        );
+    const auth = requireUserFromRequest(request);
+    if ("response" in auth) {
+        return auth.response;
     }
 
     try {
-        let media = await prisma.media.findUnique({ where: { external_id: externalId } });
-        if (!media) {
-            media = await prisma.media.create({
-                data: {
-                    external_id: externalId,
-                    media_source: mediaSource,
-                    media_type: mediaType,
-                    title: title ?? null,
-                    poster_path: posterPath ?? null,
-                },
-            });
-        } else if (title || posterPath) {
-            media = await prisma.media.update({
-                where: { external_id: externalId },
-                data: { title: title ?? media.title, poster_path: posterPath ?? media.poster_path },
-            });
-        }
-
-        const existing = await prisma.tracking.findUnique({
-            where: { user_id_media_id: { user_id: user.id, media_id: media.id } },
-        });
-        if (existing) {
-            return new Response(
-                JSON.stringify({ error: "Tracking entry already exists" }),
-                { status: 409 },
-            );
-        }
-
-        const tracking = await prisma.tracking.create({
-            data: {
-                user_id: user.id,
-                media_id: media.id,
-                status,
-                rating,
-                started_date: startedDate ? new Date(startedDate) : null,
-                completed_date: completedDate ? new Date(completedDate) : null,
-                notes,
-            },
+        const result = await createTrackingEntry({
+            userId: auth.user.id,
+            externalId,
+            mediaSource,
+            mediaType,
+            title,
+            posterPath,
+            status,
+            rating,
+            startedDate,
+            completedDate,
+            notes,
         });
 
-        return new Response(JSON.stringify(tracking), { status: 201 });
+        if (!result.ok) {
+            return errorResponse("Tracking entry already exists", 409);
+        }
+
+        return jsonResponse(result.tracking, 201);
     } catch (error) {
-        return new Response(
-            JSON.stringify({ error: (error as Error).message }),
-            { status: 500 },
-        );
+        return errorResponse((error as Error).message, 500);
     }
 }
 
 export async function GET(request: NextRequest) {
-    const user = getUserFromRequest(request);
-    if (!user) {
-        return new Response(
-            JSON.stringify({ error: "Unauthorized" }),
-            { status: 401 },
-        );
+    const auth = requireUserFromRequest(request);
+    if ("response" in auth) {
+        return auth.response;
     }
 
     try {
-        const trackings = await prisma.tracking.findMany({
-            where: { user_id: user.id },
-            include: { media: true },
-        });
-        return new Response(JSON.stringify(trackings), { status: 200 });
+        const trackings = await listTrackingForUser(auth.user.id);
+        return jsonResponse(trackings);
     } catch (error) {
-        return new Response(
-            JSON.stringify({ error: (error as Error).message }),
-            { status: 500 },
-        );
+        return errorResponse((error as Error).message, 500);
     }
 }

@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { getCurrentUser, deleteSession, clearSessionCookie } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
+import { routes } from "@/lib/routes";
 
 async function logout() {
     "use server";
@@ -12,7 +13,7 @@ async function logout() {
         await deleteSession(token);
     }
     await clearSessionCookie();
-    redirect("/login");
+    redirect(routes.auth.login);
 }
 
 export async function Nav() {
@@ -20,19 +21,19 @@ export async function Nav() {
 
     return (
         <nav className="flex items-center justify-between p-3 mb-4 border-b">
-            <Link href="/" className="font-semibold text-lg">
+            <Link href={routes.home} className="font-semibold text-lg">
                 Trackarr
             </Link>
             <div className="flex items-center gap-3">
                 {user ? (
                     <>
-                        <Link href="/search" className="text-sm text-muted-foreground">
+                        <Link href={routes.dashboard.search} className="text-sm text-muted-foreground">
                             search
                         </Link>
-                        <Link href="/library" className="text-sm text-muted-foreground">
+                        <Link href={routes.dashboard.library} className="text-sm text-muted-foreground">
                             library
                         </Link>
-                        <Link href="/settings/account" className="text-sm text-muted-foreground">
+                        <Link href={routes.dashboard.settingsAccount} className="text-sm text-muted-foreground">
                             settings
                         </Link>
                         <form action={logout}>
@@ -44,10 +45,10 @@ export async function Nav() {
                 ) : (
                     <>
                         <Button asChild variant="ghost" size="sm">
-                            <Link href="/login">Login</Link>
+                            <Link href={routes.auth.login}>Login</Link>
                         </Button>
                         <Button asChild size="sm">
-                            <Link href="/register">Register</Link>
+                            <Link href={routes.auth.register}>Register</Link>
                         </Button>
                     </>
                 )}

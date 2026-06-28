@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { updateAccountName } from "@/lib/services/client/auth-service";
 
 const updateAccountSchema = z.object({
     name: z
@@ -39,20 +40,15 @@ export function AccountForm({ currentName }: AccountFormProps) {
         setSuccess(false);
         setLoading(true);
         try {
-            const response = await fetch("/api/auth/account", {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ name: data.name }),
-            });
-            if (response.ok) {
-                setSuccess(true);
-                router.refresh();
-            } else {
-                const body = await response.json();
-                setServerError(body.error ?? "Account update failed. Please try again.");
-            }
-        } catch {
-            setServerError("An unexpected error occurred. Please try again.");
+            await updateAccountName(data.name);
+            setSuccess(true);
+            router.refresh();
+        } catch (error) {
+            setServerError(
+                error instanceof Error
+                    ? error.message
+                    : "An unexpected error occurred. Please try again."
+            );
         } finally {
             setLoading(false);
         }

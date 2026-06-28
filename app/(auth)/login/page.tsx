@@ -7,7 +7,6 @@ import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
-    Card,
     CardContent,
     CardDescription,
     CardFooter,
@@ -17,6 +16,8 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { routes } from "@/lib/routes";
+import { login } from "@/lib/services/client/auth-service";
 
 const loginSchema = z.object({
     username: z
@@ -48,20 +49,15 @@ export default function LoginPage() {
         setServerError(null);
         setLoading(true);
         try {
-            const response = await fetch("/api/auth/login", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data),
-            });
-            if (response.ok) {
-                router.refresh();
-                router.push("/");
-            } else {
-                const body = await response.json();
-                setServerError(body.error ?? "Login failed. Please try again.");
-            }
-        } catch {
-            setServerError("An unexpected error occurred. Please try again.");
+            await login(data);
+            router.refresh();
+            router.push(routes.home);
+        } catch (error) {
+            setServerError(
+                error instanceof Error
+                    ? error.message
+                    : "An unexpected error occurred. Please try again."
+            );
         } finally {
             setLoading(false);
         }
@@ -135,7 +131,7 @@ export default function LoginPage() {
                     <p className="text-sm text-muted-foreground text-center">
                         Don&apos;t have an account?{" "}
                         <Link
-                            href="/register"
+                            href={routes.auth.register}
                             className="underline underline-offset-4 hover:text-primary"
                         >
                             Register

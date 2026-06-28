@@ -1,6 +1,6 @@
 import { Card, CardContent, CardTitle } from "./ui/card";
 
-export function MediaCard({ children }: React.PropsWithChildren<{}>) {
+export function MediaCard({ children }: React.PropsWithChildren) {
     return (
         <Card className="w-full flex flex-row gap-4 items-stretch max-h-64 p-4">
             {children}
@@ -29,7 +29,7 @@ export function MediaCardImage({ src, alt }: MediaCardImageProps) {
     );
 }
 
-export function MediaCardContent({ children }: React.PropsWithChildren<{}>) {
+export function MediaCardContent({ children }: React.PropsWithChildren) {
     return (
         <div className="flex-1 flex flex-col gap-2">
             {children}
@@ -37,13 +37,13 @@ export function MediaCardContent({ children }: React.PropsWithChildren<{}>) {
     );
 }
 
-export function MediaCardTitle({ children }: React.PropsWithChildren<{}>) {
+export function MediaCardTitle({ children }: React.PropsWithChildren) {
     return (
         <CardTitle className="text-2xl">{children}</CardTitle>
     );
 }
 
-export function MediaCardDescription({ children }: React.PropsWithChildren<{}>) {
+export function MediaCardDescription({ children }: React.PropsWithChildren) {
     // Clamp to 3 lines, show ellipsis if overflow
     return (
         <CardContent className="px-0 line-clamp-6 overflow-hidden text-ellipsis">{children}</CardContent>

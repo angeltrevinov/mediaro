@@ -14,6 +14,10 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "./ui/alert-dialog";
+import {
+    deleteTracking,
+    getTrackingByExternalId,
+} from "@/lib/services/client/tracking-service";
 
 type TrackingPanelProps = {
     externalId: string;
@@ -28,11 +32,8 @@ export function TrackingPanel({ externalId, title, posterPath }: TrackingPanelPr
 
     const fetchTracking = useCallback(async () => {
         try {
-            const response = await fetch(`/api/tracking/${externalId}`);
-            if (response.ok) {
-                const data = await response.json() as TrackingData | null;
-                setTracking(data);
-            }
+            const data = (await getTrackingByExternalId(externalId)) as TrackingData | null;
+            setTracking(data);
         } catch {
             // no tracking found
         } finally {
@@ -47,7 +48,7 @@ export function TrackingPanel({ externalId, title, posterPath }: TrackingPanelPr
     async function handleDelete() {
         setDeleting(true);
         try {
-            await fetch(`/api/tracking/${externalId}`, { method: "DELETE" });
+            await deleteTracking(externalId);
             setTracking(null);
         } finally {
             setDeleting(false);

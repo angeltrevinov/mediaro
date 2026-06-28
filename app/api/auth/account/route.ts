@@ -1,5 +1,6 @@
-import { getUserFromRequest } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
+import { requireUserFromRequest } from "@/lib/auth";
+import { jsonResponse, parseJsonBody } from "@/lib/api-route-helpers";
+import { updateAccountName } from "@/lib/services/server/auth-service";
 import { NextRequest } from "next/server";
 import { z } from "zod";
 
@@ -11,40 +12,18 @@ const updateAccountSchema = z.object({
 });
 
 export async function PATCH(request: NextRequest) {
-    let body: unknown;
-    try {
-        body = await request.json();
-    } catch {
-        return new Response(
-            JSON.stringify({ error: "Invalid or missing JSON body" }),
-            { status: 400 },
-        );
+    const parsed = await parseJsonBody(request, updateAccountSchema);
+    if ("response" in parsed) {
+        return parsed.response;
+    }
+    const { name } = parsed.data;
+
+    const auth = requireUserFromRequest(request);
+    if ("response" in auth) {
+        return auth.response;
     }
 
-    const result = updateAccountSchema.safeParse(body);
-    if (!result.success) {
-        return new Response(
-            JSON.stringify({ error: result.error.issues[0].message }),
-            { status: 400 },
-        );
-    }
-    const { name } = result.data;
+    await updateAccountName(auth.user.id, name);
 
-    const user = getUserFromRequest(request);
-    if (!user) {
-        return new Response(
-            JSON.stringify({ error: "Unauthorized" }),
-            { status: 401 },
-        );
-    }
-
-    await prisma.user.update({
-        where: { id: user.id },
-        data: { name },
-    });
-
-    return new Response(
-        JSON.stringify({ message: "Name updated successfully" }),
-        { status: 200 },
-    );
+    return jsonResponse({ message: "Name updated successfully" });
 }

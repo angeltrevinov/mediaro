@@ -1,6 +1,6 @@
-import { prisma } from "@/lib/prisma";
 import { createSession, setSessionCookie } from "@/lib/auth";
-import bcrypt from "bcrypt";
+import { errorResponse, jsonResponse, parseJsonBody } from "@/lib/api-route-helpers";
+import { authenticateUser } from "@/lib/services/server/auth-service";
 import { z } from "zod";
 import { NextRequest } from "next/server";
 
@@ -17,54 +17,25 @@ const loginSchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
-    let body: unknown;
-    try {
-        body = await request.json();
-    } catch {
-        return new Response(
-            JSON.stringify({ error: "Invalid or missing JSON body" }),
-            { status: 400 },
-        );
+    const parsed = await parseJsonBody(request, loginSchema);
+    if ("response" in parsed) {
+        return parsed.response;
     }
 
-    const result = loginSchema.safeParse(body);
-    if (!result.success) {
-        return new Response(
-            JSON.stringify({ error: result.error.issues[0].message }),
-            { status: 400 },
-        );
-    }
-    const { username, password } = result.data;
+    const { username, password } = parsed.data;
 
-    const user = await prisma.user.findUnique({
-        where: { username },
-    });
+    const user = await authenticateUser(username, password);
     if (!user) {
-        return new Response(
-            JSON.stringify({ error: "Invalid username or password" }),
-            { status: 401 },
-        );
-    }
-
-    // verify the password with bcrypt
-    const isPasswordValid = await bcrypt.compare(password, user.password_hash);
-    if (!isPasswordValid) {
-        return new Response(
-            JSON.stringify({ error: "Invalid username or password" }),
-            { status: 401 },
-        );
+        return errorResponse("Invalid username or password", 401);
     }
 
     const token = await createSession(user.id);
     await setSessionCookie(token);
 
-    return new Response(
-        JSON.stringify({
-            id: user.id,
-            username: user.username,
-            name: user.name,
-            role: user.role,
-        }),
-        { status: 200 },
-    );
+    return jsonResponse({
+        id: user.id,
+        username: user.username,
+        name: user.name,
+        role: user.role,
+    });
 }
