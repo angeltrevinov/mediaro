@@ -149,8 +149,6 @@ export default function MovieDetailsPage({
                 <div className="rounded-xl border bg-card p-4 order-2 lg:order-1">
                     <TrackingPanel
                         externalId={movie.id.toString()}
-                        title={movie.title}
-                        posterPath={movie.posterPath}
                     />
                 </div>
 

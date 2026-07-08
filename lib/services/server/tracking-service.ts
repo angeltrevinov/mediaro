@@ -6,8 +6,6 @@ export type CreateTrackingInput = {
     externalId: string;
     mediaSource: string;
     mediaType: MediaType;
-    title?: string;
-    posterPath?: string;
     status: TrackingStatus;
     rating?: number;
     startedDate?: string;
@@ -18,8 +16,6 @@ export type CreateTrackingInput = {
 export type UpdateTrackingInput = {
     userId: number;
     externalId: string;
-    title?: string;
-    posterPath?: string;
     status: TrackingStatus;
     rating?: number;
     startedDate?: string;
@@ -31,8 +27,6 @@ async function upsertMediaDetails(input: {
     externalId: string;
     mediaSource: string;
     mediaType: MediaType;
-    title?: string;
-    posterPath?: string;
 }) {
     const existingMedia = await prisma.media.findUnique({
         where: { external_id: input.externalId },
@@ -44,23 +38,11 @@ async function upsertMediaDetails(input: {
                 external_id: input.externalId,
                 media_source: input.mediaSource,
                 media_type: input.mediaType,
-                title: input.title ?? null,
-                poster_path: input.posterPath ?? null,
             },
         });
-    }
-
-    if (!input.title && !input.posterPath) {
+    } else {
         return existingMedia;
     }
-
-    return prisma.media.update({
-        where: { external_id: input.externalId },
-        data: {
-            title: input.title ?? existingMedia.title,
-            poster_path: input.posterPath ?? existingMedia.poster_path,
-        },
-    });
 }
 
 export async function listTrackingForUser(userId: number) {
@@ -82,8 +64,6 @@ export async function createTrackingEntry(input: CreateTrackingInput) {
         externalId: input.externalId,
         mediaSource: input.mediaSource,
         mediaType: input.mediaType,
-        title: input.title,
-        posterPath: input.posterPath,
     });
 
     const existing = await prisma.tracking.findUnique({
@@ -121,16 +101,6 @@ export async function updateTrackingEntry(input: UpdateTrackingInput) {
 
     if (!media) {
         return { ok: false as const, error: "Media not found" as const };
-    }
-
-    if (input.title || input.posterPath) {
-        await prisma.media.update({
-            where: { external_id: input.externalId },
-            data: {
-                title: input.title ?? media.title,
-                poster_path: input.posterPath ?? media.poster_path,
-            },
-        });
     }
 
     const tracking = await prisma.tracking.update({

@@ -29,8 +29,6 @@ export async function GET(
 }
 
 const trackingSchema = z.object({
-    title: z.string().optional(),
-    posterPath: z.string().optional(),
     status: z.enum(TrackingStatus),
     rating: z.number().min(0, "Rating must be at least 0").max(10, "Rating must be at most 10").optional(),
     startedDate: z.string().optional(),
@@ -47,7 +45,7 @@ export async function PATCH(
     if ("response" in parsed) {
         return parsed.response;
     }
-    const { title, posterPath, status, rating, startedDate, completedDate, notes } = parsed.data;
+    const { status, rating, startedDate, completedDate, notes } = parsed.data;
 
     const auth = requireUserFromRequest(request);
     if ("response" in auth) {
@@ -58,8 +56,6 @@ export async function PATCH(
         const result = await updateTrackingEntry({
             userId: auth.user.id,
             externalId,
-            title,
-            posterPath,
             status,
             rating,
             startedDate,

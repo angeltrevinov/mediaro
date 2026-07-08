@@ -14,8 +14,8 @@ export type TrackingItem = {
         external_id: string;
         media_source?: string;
         media_type: string;
-        title: string | null;
-        poster_path: string | null;
+        title?: string | null;
+        poster_path?: string | null;
     };
 };
 
@@ -24,8 +24,6 @@ export type SaveTrackingPayload = {
     mediaSource: string;
     mediaType: MediaType;
     status: TrackingStatus;
-    title?: string;
-    posterPath?: string;
     rating?: number;
     startedDate?: string;
     completedDate?: string;

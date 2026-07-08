@@ -8,9 +8,7 @@ export default async function DashboardLayout({
   return (
     <>
       <Nav />
-      <main className="m-4">
-        {children}
-      </main>
+      <main className="m-4">{children}</main>
     </>
   );
 }

@@ -27,8 +27,6 @@ export type TrackingData = {
 
 type MediaFormProps = {
     externalId: string;
-    title?: string;
-    posterPath?: string | null;
     tracking?: TrackingData;
     onSuccess?: () => void;
 };
@@ -38,8 +36,6 @@ const trackingFormSchema = z.object({
     mediaSource: z.string().min(1, "Media source is required"),
     mediaType: z.enum(MediaType),
     status: z.enum(TrackingStatus),
-    title: z.string().optional(),
-    posterPath: z.string().optional(),
     rating: z
         .number()
         .min(1, "Rating must be at least 1")
@@ -72,7 +68,7 @@ function toDateInputValue(val?: string | Date | null): string {
     return d.toISOString().slice(0, 10);
 }
 
-export function MediaForm({ externalId, title, posterPath, tracking, onSuccess }: MediaFormProps) {
+export function MediaForm({ externalId, tracking, onSuccess }: MediaFormProps) {
     const isEdit = !!tracking;
 
     const form = useForm<TrackingFormValues>({
@@ -82,8 +78,6 @@ export function MediaForm({ externalId, title, posterPath, tracking, onSuccess }
             mediaSource: "TMDB",
             mediaType: MediaType.movie,
             status: tracking?.status ?? TrackingStatus.plan_to_watch,
-            title: title ?? undefined,
-            posterPath: posterPath ?? undefined,
             rating: tracking?.rating ?? undefined,
             startedDate: toDateInputValue(tracking?.started_date),
             completedDate: toDateInputValue(tracking?.completed_date),
@@ -109,8 +103,6 @@ export function MediaForm({ externalId, title, posterPath, tracking, onSuccess }
         try {
             if (isEdit) {
                 await updateTracking(externalId, {
-                    title: payload.title,
-                    posterPath: payload.posterPath,
                     status: payload.status,
                     rating: payload.rating,
                     startedDate: payload.startedDate,

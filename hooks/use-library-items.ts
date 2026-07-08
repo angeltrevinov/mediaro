@@ -1,17 +1,23 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { type EnrichedTrackingItem } from "@/components/library-table";
 import {
     listTracking,
     type TrackingItem,
 } from "@/lib/services/client/tracking-service";
 import { getMovieDetails } from "@/lib/services/client/movie-service";
 
+export type EnrichedTrackingItem = TrackingItem & {
+    metadata?: {
+        title: string | null;
+        posterPath: string | null;
+    };
+};
+
 async function enrichMissingMetadata(
     rawItems: EnrichedTrackingItem[]
 ): Promise<EnrichedTrackingItem[]> {
-    const missingMetadata = rawItems.filter((item) => !item.media.title);
+    const missingMetadata = rawItems.filter((item) => !item.metadata?.title);
     if (missingMetadata.length === 0) {
         return rawItems;
     }
@@ -22,10 +28,9 @@ async function enrichMissingMetadata(
                 const movie = await getMovieDetails(item.media.external_id);
                 return {
                     ...item,
-                    media: {
-                        ...item.media,
-                        title: movie.title ?? item.media.title,
-                        poster_path: movie.posterPath ?? item.media.poster_path,
+                    metadata: {
+                        title: movie.title ?? null,
+                        posterPath: movie.posterPath ?? null,
                     },
                 } satisfies EnrichedTrackingItem;
             } catch {

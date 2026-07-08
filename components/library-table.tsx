@@ -2,6 +2,7 @@
 
 import { TrackingStatus } from "@/generated/prisma/browser";
 import { Badge } from "@/components/ui/badge";
+import { type EnrichedTrackingItem } from "@/hooks/use-library-items";
 import {
     Table,
     TableBody,
@@ -10,22 +11,6 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-
-export type TrackingItem = {
-    id: number;
-    status: TrackingStatus;
-    rating: number | null;
-    started_date: string | null;
-    completed_date: string | null;
-    media: {
-        external_id: string;
-        media_type: string;
-        title: string | null;
-        poster_path: string | null;
-    };
-};
-
-export type EnrichedTrackingItem = TrackingItem;
 
 const STATUS_LABELS: Record<TrackingStatus, string> = {
     plan_to_watch: "Plan to Watch",
@@ -69,16 +54,19 @@ type LibraryTableRowProps = {
 };
 
 export function LibraryTableRow({ item, onClick }: LibraryTableRowProps) {
+    const displayTitle = item.metadata?.title ?? item.media.external_id;
+    const displayPoster = item.metadata?.posterPath ?? null;
+
     return (
         <TableRow className="cursor-pointer" onClick={onClick}>
             <TableCell>
                 <LibraryTablePoster
-                    src={item.media.poster_path}
-                    alt={item.media.title ?? item.media.external_id}
+                    src={displayPoster}
+                    alt={displayTitle}
                 />
             </TableCell>
             <TableCell className="font-medium">
-                {item.media.title ?? item.media.external_id}
+                {displayTitle}
             </TableCell>
             <TableCell>
                 <Badge variant="secondary">{STATUS_LABELS[item.status]}</Badge>
@@ -98,19 +86,22 @@ type LibraryCardProps = {
 };
 
 export function LibraryCard({ item, onClick }: LibraryCardProps) {
+    const displayTitle = item.metadata?.title ?? item.media.external_id;
+    const displayPoster = item.metadata?.posterPath ?? null;
+
     return (
         <div
             className="flex gap-3 rounded-xl border bg-card p-3 cursor-pointer hover:bg-accent transition-colors"
             onClick={onClick}
         >
             <LibraryTablePoster
-                src={item.media.poster_path}
-                alt={item.media.title ?? item.media.external_id}
+                src={displayPoster}
+                alt={displayTitle}
                 size="lg"
             />
             <div className="flex flex-col gap-1.5 min-w-0 justify-center">
                 <p className="font-medium leading-tight truncate">
-                    {item.media.title ?? item.media.external_id}
+                    {displayTitle}
                 </p>
                 <Badge variant="secondary" className="w-fit">
                     {STATUS_LABELS[item.status]}
