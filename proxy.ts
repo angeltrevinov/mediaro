@@ -1,5 +1,10 @@
 import { validateSession } from "@/lib/auth";
+import { routes } from "@/lib/routes";
 import { NextRequest, NextResponse } from "next/server";
+
+function isAuthRoute(pathname: string) {
+    return pathname === routes.auth.login || pathname === routes.auth.register;
+}
 
 function unauthorized(request: NextRequest) {
     if (request.nextUrl.pathname.startsWith("/api/")) {
@@ -8,11 +13,25 @@ function unauthorized(request: NextRequest) {
             { status: 401, headers: { "Content-Type": "application/json" } },
         );
     }
-    return NextResponse.redirect(new URL("/login", request.url));
+    return NextResponse.redirect(new URL(routes.auth.login, request.url));
 }
 
 export async function proxy(request: NextRequest) {
+    const { pathname } = request.nextUrl;
     const sessionCookie = request.cookies.get("session");
+
+    if (isAuthRoute(pathname)) {
+        if (!sessionCookie?.value) {
+            return NextResponse.next();
+        }
+
+        const user = await validateSession(sessionCookie.value);
+        if (user) {
+            return NextResponse.redirect(new URL(routes.home, request.url));
+        }
+
+        return NextResponse.next();
+    }
 
     if (!sessionCookie?.value) {
         return unauthorized(request);
@@ -31,6 +50,9 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
     matcher: [
+        // Auth routes
+        "/login",
+        "/register",
         // API routes
         "/api/auth/reset-password",
         "/api/movie/:path*",

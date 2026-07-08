@@ -42,7 +42,6 @@ Requirements:
 ```bash
 npx prisma generate
 npx prisma migrate dev
-npx prisma db seed
 ```
 
 ### 4) Start the project
