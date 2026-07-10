@@ -23,6 +23,7 @@ import {
 } from "@/components/media-details";
 import { TrackingPanel } from "@/components/tracking-panel";
 import { getMovieDetails } from "@/lib/services/client/movie-service";
+import { MediaCardAttribution } from "@/components/media-card";
 
 function formatRuntime(minutes: number): string {
     const h = Math.floor(minutes / 60);
@@ -140,6 +141,17 @@ export default function MovieDetailsPage({
                             <Badge variant="outline">{movie.status}</Badge>
                         )}
                     </MediaDetailsMeta>
+                    <MediaCardAttribution>
+                        The metadata for this media is provided by{" "}
+                        <a
+                            href={`https://www.themoviedb.org/movie/${movie.id}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="underline underline-offset-4 text-foreground hover:text-foreground/80"
+                        >
+                            TMDB
+                        </a>
+                    </MediaCardAttribution>
                 </MediaDetailsHeaderContent>
             </MediaDetailsHeader>
 
