@@ -2,6 +2,10 @@
 
 Mediaro is a Next.js application for searching media and tracking user progress/status with a Prisma + SQLite backend.
 
+## License
+
+This project is licensed under the MIT License. See the LICENSE file for details.
+
 ## Documentation
 
 - Project architecture and structure:
