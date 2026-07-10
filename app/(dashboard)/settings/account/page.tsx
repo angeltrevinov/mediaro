@@ -10,12 +10,14 @@ export default async function AccountSettingsPage() {
     if (!user) redirect(routes.auth.login);
 
     return (
-        <div className="flex flex-col gap-4">
-            <h1 className="text-2xl font-bold">Account Settings</h1>
-            <p>Manage your account settings and preferences.</p>
-            <AccountForm currentName={user.name} />
+        <div className="flex flex-col gap-10">
+            <section id="AccountInformation" className="flex flex-col gap-4">
+                <AccountForm currentName={user.name} />
+            </section>
             <Separator />
-            <ResetPasswordForm />
+            <section id="ResetPassword" className="flex flex-col gap-4">
+                <ResetPasswordForm />
+            </section>
         </div>
     );
 }

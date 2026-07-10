@@ -7,12 +7,18 @@ export const routes = {
     dashboard: {
         library: "/library",
         search: "/search",
-        settingsAccount: "/settings/account",
+        settings: {
+            root: "/settings",
+            account: "/settings/account",
+            metadataProviders: "/settings/metadata-providers",
+        },
     },
 } as const;
 
 export const apiRoutes = {
+    root: "/api",
     auth: {
+        root: "/api/auth",
         login: "/api/auth/login",
         register: "/api/auth/register",
         logout: "/api/auth/logout",
@@ -20,6 +26,7 @@ export const apiRoutes = {
         resetPassword: "/api/auth/reset-password",
     },
     movie: {
+        root: "/api/movie",
         search: "/api/movie/search",
         byId: (id: string) => `/api/movie/${id}`,
     },

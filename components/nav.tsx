@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Route } from "next";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { getCurrentUser, deleteSession, clearSessionCookie } from "@/lib/auth";
@@ -33,7 +34,7 @@ export async function Nav() {
                         <Link href={routes.dashboard.library} className="text-sm text-muted-foreground">
                             library
                         </Link>
-                        <Link href={routes.dashboard.settingsAccount} className="text-sm text-muted-foreground">
+                        <Link href={routes.dashboard.settings.root as Route} className="text-sm text-muted-foreground">
                             settings
                         </Link>
                         <form action={logout}>
