@@ -1,7 +1,7 @@
 "use client";
 
 import type { Route } from "next";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import * as z from "zod";
 import { useForm, type UseFormReturn } from "react-hook-form";
@@ -29,13 +29,6 @@ export interface UseMediaSearchReturn<T> {
     generatePageLink: (page: number) => Route;
 }
 
-/**
- * Generic hook for media search pages. Handles URL param syncing, form state,
- * and data fetching. Pass a media-specific fetch function to customise the source.
- *
- * The fetch function should be defined outside the component (or wrapped in
- * useCallback) so it is stable across renders.
- */
 export function useMediaSearch<T>(
     fetchFn: (query: string, page: number) => Promise<PaginatedResult<T>>,
 ): UseMediaSearchReturn<T> {
@@ -51,10 +44,20 @@ export function useMediaSearch<T>(
         defaultValues: { query: "", page: 1 },
     });
 
+    const fetchPage = useCallback(async (query: string, page: number) => {
+        setLoading(true);
+        try {
+            setResults(await fetchFn(query, page));
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    }, [fetchFn]);
+
     useEffect(() => {
         const query = (searchParams.get("query") ?? "").trim();
-        const pageRaw = Number(searchParams.get("page") ?? "1");
-        const page = Number.isFinite(pageRaw) && pageRaw > 0 ? pageRaw : 1;
+        const page = Math.max(1, Number(searchParams.get("page")) || 1);
 
         form.setValue("query", query);
         form.setValue("page", page);
@@ -62,20 +65,7 @@ export function useMediaSearch<T>(
         if (query) {
             fetchPage(query, page);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [searchParams]);
-
-    async function fetchPage(query: string, page: number) {
-        setLoading(true);
-        try {
-            const data = await fetchFn(query, page);
-            setResults(data);
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setLoading(false);
-        }
-    }
+    }, [searchParams, fetchPage]);
 
     function onSubmit(data: SearchFormValues) {
         const query = data.query.trim();

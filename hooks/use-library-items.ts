@@ -14,34 +14,27 @@ export type EnrichedTrackingItem = TrackingItem & {
     };
 };
 
-async function enrichMissingMetadata(
-    rawItems: EnrichedTrackingItem[]
-): Promise<EnrichedTrackingItem[]> {
-    const missingMetadata = rawItems.filter((item) => !item.metadata?.title);
-    if (missingMetadata.length === 0) {
-        return rawItems;
+async function fetchMetadata(item: EnrichedTrackingItem): Promise<EnrichedTrackingItem> {
+    try {
+        const movie = await getMovieDetails(item.media.external_id);
+        return {
+            ...item,
+            metadata: {
+                title: movie.title ?? null,
+                posterPath: movie.posterPath ?? null,
+            },
+        };
+    } catch {
+        return item;
     }
+}
 
-    const enrichedItems = await Promise.all(
-        missingMetadata.map(async (item) => {
-            try {
-                const movie = await getMovieDetails(item.media.external_id);
-                return {
-                    ...item,
-                    metadata: {
-                        title: movie.title ?? null,
-                        posterPath: movie.posterPath ?? null,
-                    },
-                } satisfies EnrichedTrackingItem;
-            } catch {
-                return item;
-            }
-        })
+async function enrichMissingMetadata(
+    items: EnrichedTrackingItem[]
+): Promise<EnrichedTrackingItem[]> {
+    return Promise.all(
+        items.map((item) => (item.metadata?.title ? item : fetchMetadata(item)))
     );
-
-    const enrichedById = new Map(enrichedItems.map((item) => [item.id, item]));
-
-    return rawItems.map((item) => enrichedById.get(item.id) ?? item);
 }
 
 export function useLibraryItems() {
@@ -52,8 +45,7 @@ export function useLibraryItems() {
         async function loadLibrary() {
             try {
                 const rawItems = (await listTracking()) as TrackingItem[];
-                const completeItems = await enrichMissingMetadata(rawItems);
-                setItems(completeItems);
+                setItems(await enrichMissingMetadata(rawItems));
             } finally {
                 setLoading(false);
             }

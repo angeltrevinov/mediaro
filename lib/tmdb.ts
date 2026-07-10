@@ -30,7 +30,10 @@ export async function searchMovies(
     }
 };
 
-export async function getMovieDetails(tmdbId: string, language: string = 'en-US'): Promise<Movie> {
+export async function getMovieDetails(
+    tmdbId: string,
+    language: string = 'en-US'
+): Promise<Movie> {
     const url = `${TMDB_API_URL}/movie/${tmdbId}?language=${language}`;
     try {
         const response = await fetch(url, TMDB_OPTIONS);

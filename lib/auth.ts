@@ -90,7 +90,9 @@ export async function getCurrentUser() {
     return validateSession(token);
 }
 
-export function getUserFromRequest(request: { headers: { get(name: string): string | null } }) {
+type RequestWithHeaders = { headers: { get(name: string): string | null } };
+
+export function getUserFromRequest(request: RequestWithHeaders) {
     const raw = request.headers.get("x-user");
     if (!raw) return null;
     try {
@@ -100,7 +102,7 @@ export function getUserFromRequest(request: { headers: { get(name: string): stri
     }
 }
 
-export function requireUserFromRequest(request: { headers: { get(name: string): string | null } }) {
+export function requireUserFromRequest(request: RequestWithHeaders) {
     const user = getUserFromRequest(request);
     if (!user) {
         return { response: new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401 }) };

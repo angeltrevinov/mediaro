@@ -8,7 +8,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "init-db": "npx prisma generate && npx prisma migrate reset --force",
+    "migrate-db": "npx prisma generate && npx prisma migrate dev"
+
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
