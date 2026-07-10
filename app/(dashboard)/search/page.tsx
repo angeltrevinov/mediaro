@@ -2,6 +2,7 @@
 
 import {
     MediaCard,
+    MediaCardAttribution,
     MediaCardContent,
     MediaCardDescription,
     MediaCardImage,
@@ -52,27 +53,40 @@ function SearchMoviePageContent() {
                     <>
                         <MediaSearchResultsCount count={results.totalResults} />
                         {results.results.map((movie) => (
-                            <Link
-                                key={movie.id}
-                                href={`/movie/${movie.id}?back=${encodeURIComponent(
-                                    searchParams.toString()
-                                        ? `${pathname}?${searchParams.toString()}`
-                                        : pathname
-                                )}`}
-                            >
-                                <MediaCard>
-                                    <MediaCardImage
-                                        src={movie.posterPath || ""}
-                                        alt={movie.title}
-                                    />
-                                    <MediaCardContent>
-                                        <MediaCardTitle>{movie.title}</MediaCardTitle>
-                                        <MediaCardDescription>
-                                            {movie.overview}
-                                        </MediaCardDescription>
-                                    </MediaCardContent>
-                                </MediaCard>
-                            </Link>
+                            <MediaCard key={movie.id}>
+                                <MediaCardImage
+                                    src={movie.posterPath || ""}
+                                    alt={movie.title}
+                                />
+                                <div className="flex flex-1 flex-col min-w-0">
+                                    <Link
+                                        href={`/movie/${movie.id}?back=${encodeURIComponent(
+                                            searchParams.toString()
+                                                ? `${pathname}?${searchParams.toString()}`
+                                                : pathname
+                                        )}`}
+                                        className="flex-1 block min-w-0"
+                                    >
+                                        <MediaCardContent>
+                                            <MediaCardTitle>{movie.title}</MediaCardTitle>
+                                            <MediaCardDescription>
+                                                {movie.overview}
+                                            </MediaCardDescription>
+                                        </MediaCardContent>
+                                    </Link>
+                                    <MediaCardAttribution>
+                                        The metadata for this media is provided by{" "}
+                                        <a
+                                            href="https://www.themoviedb.org/"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="underline underline-offset-4 text-foreground hover:text-foreground/80"
+                                        >
+                                            TMDB
+                                        </a>
+                                    </MediaCardAttribution>
+                                </div>
+                            </MediaCard>
                         ))}
                         <MediaSearchPagination
                             currentPage={results.page}
