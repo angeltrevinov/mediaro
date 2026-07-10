@@ -10,7 +10,7 @@ export const routes = {
         settings: {
             root: "/settings",
             account: "/settings/account",
-            metadataProviders: "/settings/metadata-providers",
+            metadata: "/settings/metadata",
         },
     },
 } as const;

@@ -20,7 +20,7 @@ const navItems: NavGroup[] = [
     },
     {
         label: "Metadata Providers",
-        href: routes.dashboard.settings.metadataProviders,
+        href: routes.dashboard.settings.metadata,
     },
 ];
 

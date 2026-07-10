@@ -77,7 +77,7 @@ function SearchMoviePageContent() {
                                     <MediaCardAttribution>
                                         The metadata for this media is provided by{" "}
                                         <a
-                                            href="https://www.themoviedb.org/"
+                                            href={`https://www.themoviedb.org/movie/${movie.id}`}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             className="underline underline-offset-4 text-foreground hover:text-foreground/80"

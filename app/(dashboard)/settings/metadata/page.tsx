@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-export default async function MetadataProvidersSettingsPage() {
+export default async function MetadataSettingsPage() {
     return (
         <div className="flex flex-col gap-6">
             <Card>
