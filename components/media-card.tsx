@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Card, CardContent, CardFooter, CardTitle } from "./ui/card";
 
 export function MediaCard({ children }: React.PropsWithChildren) {
@@ -22,9 +23,12 @@ export function MediaCardImage({ src, alt }: MediaCardImageProps) {
         );
     }
     return (
-        <img
+        <Image
             src={src}
             alt={alt}
+            width={144}
+            height={224}
+            sizes="144px"
             className="h-56 w-36 object-cover rounded-md self-center" />
     );
 }

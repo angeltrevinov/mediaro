@@ -1,6 +1,6 @@
-# Trackarr
+# Mediaro
 
-Trackarr is a Next.js application for searching media and tracking user progress/status with a Prisma + SQLite backend.
+Mediaro is a Next.js application for searching media and tracking user progress/status with a Prisma + SQLite backend.
 
 ## Documentation
 

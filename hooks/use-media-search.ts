@@ -1,5 +1,6 @@
 "use client";
 
+import type { Route } from "next";
 import { useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import * as z from "zod";
@@ -25,7 +26,7 @@ export interface UseMediaSearchReturn<T> {
     results: PaginatedResult<T> | null;
     loading: boolean;
     onSubmit: (data: SearchFormValues) => void;
-    generatePageLink: (page: number) => string;
+    generatePageLink: (page: number) => Route;
 }
 
 /**
@@ -82,14 +83,14 @@ export function useMediaSearch<T>(
         const params = new URLSearchParams(searchParams.toString());
         params.set("query", query);
         params.set("page", "1");
-        router.push(`${pathname}?${params.toString()}`);
+        router.push(`${pathname}?${params.toString()}` as Route);
     }
 
     function generatePageLink(page: number) {
         const params = new URLSearchParams(searchParams.toString());
         params.set("query", form.getValues("query") ?? "");
         params.set("page", page.toString());
-        return `${pathname}?${params.toString()}`;
+        return `${pathname}?${params.toString()}` as Route;
     }
 
     return { form, results, loading, onSubmit, generatePageLink };

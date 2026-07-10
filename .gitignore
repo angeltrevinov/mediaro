@@ -42,7 +42,7 @@ next-env.d.ts
 
 # prisma
 /generated/prisma
-data/trackarr.db
+data/mediaro.db
 
 # vscode configuration
 .vscode/

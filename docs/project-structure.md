@@ -1,6 +1,6 @@
 # Project Structure and Architecture
 
-This guide explains how Trackarr is organized so pages, APIs, and UI components are easy to find and extend.
+This guide explains how Mediaro is organized so pages, APIs, and UI components are easy to find and extend.
 
 ## High-level layout
 
@@ -16,7 +16,7 @@ This guide explains how Trackarr is organized so pages, APIs, and UI components 
 
 ## Route groups and pages
 
-Trackarr uses App Router route groups to separate authenticated and unauthenticated experiences:
+Mediaro uses App Router route groups to separate authenticated and unauthenticated experiences:
 
 - `app/(auth)/`: unauthenticated pages.
   - `/login`
@@ -70,7 +70,7 @@ Examples:
 
 ## Service architecture
 
-Trackarr now separates frontend and backend service concerns:
+Mediaro now separates frontend and backend service concerns:
 
 - Frontend domain services (`lib/services/client/*`)
   - `auth-service.ts`: login/register/account/password calls

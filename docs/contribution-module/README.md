@@ -1,6 +1,6 @@
 # Contribution Module
 
-This document defines the exact setup needed to run Trackarr locally and start Contribution Module development.
+This document defines the exact setup needed to run Mediaro locally and start Contribution Module development.
 
 ## Related Documentation
 

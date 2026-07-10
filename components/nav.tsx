@@ -23,7 +23,7 @@ export async function Nav() {
     return (
         <nav className="flex items-center justify-between p-3 mb-4 border-b">
             <Link href={routes.home} className="font-semibold text-lg">
-                Trackarr
+                Mediaro
             </Link>
             <div className="flex items-center gap-3">
                 {user ? (

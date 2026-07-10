@@ -1,6 +1,7 @@
 "use client";
 
 import { TrackingStatus } from "@/generated/prisma/browser";
+import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { type EnrichedTrackingItem } from "@/hooks/use-library-items";
 import {
@@ -35,10 +36,16 @@ type LibraryTablePosterProps = {
 export function LibraryTablePoster({ src, alt, size = "sm" }: LibraryTablePosterProps) {
     const cls = size === "lg" ? "w-12 h-18 rounded object-cover shrink-0" : "w-8 h-12 rounded object-cover shrink-0";
     if (src) {
+        const width = size === "lg" ? 48 : 32;
+        const height = size === "lg" ? 72 : 48;
+
         return (
-            <img
+            <Image
                 src={`https://image.tmdb.org/t/p/w92${src}`}
                 alt={alt}
+                width={width}
+                height={height}
+                sizes={`${width}px`}
                 className={cls}
             />
         );

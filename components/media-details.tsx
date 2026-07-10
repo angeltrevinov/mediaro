@@ -1,4 +1,6 @@
+import type { Route } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { ChevronLeftIcon } from "lucide-react";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
@@ -20,9 +22,11 @@ export function MediaDetailsBackdrop({ src, alt, backHref }: MediaDetailsBackdro
     return (
         <div className="relative w-full h-48 sm:h-72 rounded-xl overflow-hidden bg-muted">
             {src ? (
-                <img
+                <Image
                     src={src}
                     alt={alt}
+                    fill
+                    sizes="100vw"
                     className="w-full h-full object-cover"
                 />
             ) : (
@@ -37,7 +41,7 @@ export function MediaDetailsBackdrop({ src, alt, backHref }: MediaDetailsBackdro
                         asChild
                         className="bg-background/70 backdrop-blur-sm hover:bg-background/90"
                     >
-                        <Link href={backHref}>
+                        <Link href={backHref as Route}>
                             <ChevronLeftIcon />
                             Back
                         </Link>
@@ -63,9 +67,12 @@ export function MediaDetailsPoster({ src, alt }: MediaDetailsPosterProps) {
     return (
         <div className="shrink-0 mx-auto sm:mx-0">
             {src ? (
-                <img
+                <Image
                     src={src}
                     alt={alt}
+                    width={176}
+                    height={256}
+                    sizes="(min-width: 640px) 176px, 128px"
                     className="w-32 h-48 sm:w-44 sm:h-64 rounded-xl shadow-xl border border-border object-cover"
                 />
             ) : (
