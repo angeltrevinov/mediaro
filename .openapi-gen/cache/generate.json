@@ -1,0 +1,79 @@
+{
+  "baseDocumentFile": "/home/angeltrevinov/Documents/Projects/mediaro/.openapi-gen/cache/base-openapi-d9bf7ec3272220a07e70f561f4fbd9144655f69a969134c8087ff3553371e46b.json",
+  "cacheVersion": 2,
+  "configPath": "/home/angeltrevinov/Documents/Projects/mediaro/openapi-gen.config.ts",
+  "diagnostics": [],
+  "fingerprint": "d9bf7ec3272220a07e70f561f4fbd9144655f69a969134c8087ff3553371e46b",
+  "inputCount": 7,
+  "inputs": {
+    "/home/angeltrevinov/Documents/Projects/mediaro/app/api-docs/page.tsx": {
+      "hash": "58d802e82cb70bf7752eff5d1db779b96d356955ceea29adf0a9eab107231600",
+      "mtimeMs": 1787628705654.0212,
+      "size": 312
+    },
+    "/home/angeltrevinov/Documents/Projects/mediaro/app/layout.tsx": {
+      "hash": "393a1763bc430717e67b3ff5c564c755f85ca372f3ba524cdd376272e73c17a1",
+      "mtimeMs": 1787621622500.7493,
+      "size": 677
+    },
+    "/home/angeltrevinov/Documents/Projects/mediaro/app/page.tsx": {
+      "hash": "aaf072f4a18f48a6c7f3ff1e25cd076dd22b463cfeb5b7b02cd2ee3ab267ff48",
+      "mtimeMs": 1787626172129.2095,
+      "size": 653
+    },
+    "/home/angeltrevinov/Documents/Projects/mediaro/openapi-gen.config.ts": {
+      "hash": "0245c52223c996d901544f2d9ed1e99a39f62805db583e6ad8fb47328b4b3fa9",
+      "mtimeMs": 1787629095238.9805,
+      "size": 2468
+    },
+    "/home/angeltrevinov/Documents/Projects/mediaro/package.json": {
+      "hash": "25792522873acd8dd7bf1dbf81605088c024429162a8975a2d8d872250dba258",
+      "mtimeMs": 1787628448278.368,
+      "size": 984
+    },
+    "/home/angeltrevinov/Documents/Projects/mediaro/pnpm-lock.yaml": {
+      "hash": "9bf2853e469c22a5148ff2a1f38cb1cee2a321de5e4ad9f29659aee991ab1a2e",
+      "mtimeMs": 1787628847857.23,
+      "size": 206435
+    },
+    "/home/angeltrevinov/Documents/Projects/mediaro/tsconfig.json": {
+      "hash": "d03480fef10b5b49d8c94cb4b71f94aa172d2be49156e4532ec1785c3025d74d",
+      "mtimeMs": 1787621622502.7493,
+      "size": 688
+    }
+  },
+  "outputFile": "/home/angeltrevinov/Documents/Projects/mediaro/public/openapi.json",
+  "performance": {
+    "prepareTemplateMs": 0.17341600000003154,
+    "loadCustomFragmentsMs": 0.0018859999999563115,
+    "prepareDocumentMs": 0.17530199999998786,
+    "scanRouteFilesMs": 0,
+    "deriveRoutePathMs": 0,
+    "filterRouteCandidatesMs": 0,
+    "sourcePrecheckMs": 0,
+    "readRouteFilesMs": 0,
+    "parseRouteFilesMs": 0,
+    "analyzeRouteFilesMs": 0,
+    "typescriptResponseInferenceMs": 0,
+    "processRouteFilesMs": 0,
+    "registerRouteMs": 0,
+    "getSchemaContentMs": 0,
+    "createRequestParamsMs": 0,
+    "createRequestBodyMs": 0,
+    "processResponsesMs": 0,
+    "createResponseSchemaMs": 0,
+    "buildOperationsMs": 0,
+    "sortAndMergePathsMs": 0.10322599999994964,
+    "buildPathsMs": 0.10322599999994964,
+    "defaultComponentsAndErrorsMs": 0.28676900000004935,
+    "mergeSchemasMs": 0.1531620000000089,
+    "zodPreScanMs": 22.39163000000002,
+    "zodPreprocessMs": 0.9830870000000118,
+    "zodConvertMs": 0,
+    "finalizeDocumentMs": 1.2814499999999498,
+    "totalMs": 26.083304999999996,
+    "scanRoutesMs": 0
+  },
+  "routeFragments": {},
+  "updatedAt": "2026-08-25T03:38:22.009Z"
+}
