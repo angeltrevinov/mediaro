@@ -99,7 +99,7 @@ export default defineConfig({
     }
   },
   schemaType: "zod",
-  schemaFiles: [],
+  schemaFiles: ["./schemas/*.ts"],
   docsUrl: "api-docs",
   ui: "scalar",
   outputFile: "openapi.json",
