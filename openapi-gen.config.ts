@@ -99,7 +99,7 @@ export default defineConfig({
     }
   },
   schemaType: "zod",
-  schemaFiles: ["./schemas/*.ts"],
+  schemaFiles: [],
   docsUrl: "api-docs",
   ui: "scalar",
   outputFile: "openapi.json",
@@ -111,7 +111,7 @@ export default defineConfig({
   debug: false,
   apiDir: "./app/api",
   routerType: "app",
-  schemaDir: "./app",
+  schemaDir: "./schemas",
   framework: {
     kind: "nextjs",
     router: "app"

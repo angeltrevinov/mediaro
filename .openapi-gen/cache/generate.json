@@ -1,40 +1,35 @@
 {
-  "baseDocumentFile": "/home/angeltrevinov/Documents/Projects/mediaro/.openapi-gen/cache/base-openapi-d9bf7ec3272220a07e70f561f4fbd9144655f69a969134c8087ff3553371e46b.json",
+  "baseDocumentFile": "/home/angeltrevinov/Documents/Projects/mediaro/.openapi-gen/cache/base-openapi-b1124fc902a6db7af80e698d8c92139a4f5be7b73f6ee181dd378b5549180365.json",
   "cacheVersion": 2,
   "configPath": "/home/angeltrevinov/Documents/Projects/mediaro/openapi-gen.config.ts",
   "diagnostics": [],
-  "fingerprint": "d9bf7ec3272220a07e70f561f4fbd9144655f69a969134c8087ff3553371e46b",
-  "inputCount": 7,
+  "fingerprint": "b1124fc902a6db7af80e698d8c92139a4f5be7b73f6ee181dd378b5549180365",
+  "inputCount": 6,
   "inputs": {
-    "/home/angeltrevinov/Documents/Projects/mediaro/app/api-docs/page.tsx": {
-      "hash": "58d802e82cb70bf7752eff5d1db779b96d356955ceea29adf0a9eab107231600",
-      "mtimeMs": 1787628705654.0212,
-      "size": 312
-    },
-    "/home/angeltrevinov/Documents/Projects/mediaro/app/layout.tsx": {
-      "hash": "393a1763bc430717e67b3ff5c564c755f85ca372f3ba524cdd376272e73c17a1",
-      "mtimeMs": 1787621622500.7493,
-      "size": 677
-    },
-    "/home/angeltrevinov/Documents/Projects/mediaro/app/page.tsx": {
-      "hash": "aaf072f4a18f48a6c7f3ff1e25cd076dd22b463cfeb5b7b02cd2ee3ab267ff48",
-      "mtimeMs": 1787626172129.2095,
-      "size": 653
+    "/home/angeltrevinov/Documents/Projects/mediaro/app/api/discover/movies/route.ts": {
+      "hash": "9a799b6d07a9b85bc96042174f74d818ccc674e4220fdf475ad922c1cfabff92",
+      "mtimeMs": 1787791211243.145,
+      "size": 859
     },
     "/home/angeltrevinov/Documents/Projects/mediaro/openapi-gen.config.ts": {
-      "hash": "0245c52223c996d901544f2d9ed1e99a39f62805db583e6ad8fb47328b4b3fa9",
-      "mtimeMs": 1787629095238.9805,
-      "size": 2468
+      "hash": "7cf5e27386506dafef062d6d1ad7b1667ae7cbd119f3c0ad7c0ad48a8a97673f",
+      "mtimeMs": 1787792294931.9182,
+      "size": 2472
     },
     "/home/angeltrevinov/Documents/Projects/mediaro/package.json": {
-      "hash": "25792522873acd8dd7bf1dbf81605088c024429162a8975a2d8d872250dba258",
-      "mtimeMs": 1787628448278.368,
-      "size": 984
+      "hash": "99771aa3831af54471bb7cea8f9e628640cb8965d1497fbba4d795b95e034a54",
+      "mtimeMs": 1787712164305.867,
+      "size": 1030
     },
     "/home/angeltrevinov/Documents/Projects/mediaro/pnpm-lock.yaml": {
-      "hash": "9bf2853e469c22a5148ff2a1f38cb1cee2a321de5e4ad9f29659aee991ab1a2e",
-      "mtimeMs": 1787628847857.23,
-      "size": 206435
+      "hash": "2db4a4689d2643a16aff356475b847d38d9aaf54c0241bb8af5b2857ab88d832",
+      "mtimeMs": 1787712164306.5493,
+      "size": 288692
+    },
+    "/home/angeltrevinov/Documents/Projects/mediaro/schemas/movies.ts": {
+      "hash": "ce12a8179c8930aa9b1f248756380ea6914a0434f0c538b0c5da5b604892404e",
+      "mtimeMs": 1787792014512.8176,
+      "size": 531
     },
     "/home/angeltrevinov/Documents/Projects/mediaro/tsconfig.json": {
       "hash": "d03480fef10b5b49d8c94cb4b71f94aa172d2be49156e4532ec1785c3025d74d",
@@ -44,36 +39,104 @@
   },
   "outputFile": "/home/angeltrevinov/Documents/Projects/mediaro/public/openapi.json",
   "performance": {
-    "prepareTemplateMs": 0.17341600000003154,
-    "loadCustomFragmentsMs": 0.0018859999999563115,
-    "prepareDocumentMs": 0.17530199999998786,
-    "scanRouteFilesMs": 0,
-    "deriveRoutePathMs": 0,
-    "filterRouteCandidatesMs": 0,
-    "sourcePrecheckMs": 0,
-    "readRouteFilesMs": 0,
-    "parseRouteFilesMs": 0,
-    "analyzeRouteFilesMs": 0,
+    "prepareTemplateMs": 0.11875300000002653,
+    "loadCustomFragmentsMs": 0.0007510000000365835,
+    "prepareDocumentMs": 0.11950400000006312,
+    "scanRouteFilesMs": 0.24253500000003214,
+    "deriveRoutePathMs": 0.23906799999997475,
+    "filterRouteCandidatesMs": 0.02931499999999687,
+    "sourcePrecheckMs": 0.2913770000000113,
+    "readRouteFilesMs": 0.03113899999999603,
+    "parseRouteFilesMs": 1.1147509999999556,
+    "analyzeRouteFilesMs": 4.73071299999998,
     "typescriptResponseInferenceMs": 0,
-    "processRouteFilesMs": 0,
-    "registerRouteMs": 0,
-    "getSchemaContentMs": 0,
-    "createRequestParamsMs": 0,
+    "processRouteFilesMs": 6.011284999999987,
+    "registerRouteMs": 1.8627529999999979,
+    "getSchemaContentMs": 0.14626500000002807,
+    "createRequestParamsMs": 0.27807200000000876,
     "createRequestBodyMs": 0,
-    "processResponsesMs": 0,
+    "processResponsesMs": 0.532669999999996,
     "createResponseSchemaMs": 0,
-    "buildOperationsMs": 0,
-    "sortAndMergePathsMs": 0.10322599999994964,
-    "buildPathsMs": 0.10322599999994964,
-    "defaultComponentsAndErrorsMs": 0.28676900000004935,
-    "mergeSchemasMs": 0.1531620000000089,
-    "zodPreScanMs": 22.39163000000002,
-    "zodPreprocessMs": 0.9830870000000118,
+    "buildOperationsMs": 4.383422000000053,
+    "sortAndMergePathsMs": 0.1979809999999702,
+    "buildPathsMs": 0.1979809999999702,
+    "defaultComponentsAndErrorsMs": 0.3152520000000436,
+    "mergeSchemasMs": 0.15329700000000912,
+    "zodPreScanMs": 18.35626000000002,
+    "zodPreprocessMs": 5.603490000000022,
     "zodConvertMs": 0,
-    "finalizeDocumentMs": 1.2814499999999498,
-    "totalMs": 26.083304999999996,
-    "scanRoutesMs": 0
+    "finalizeDocumentMs": 1.9280760000000328,
+    "totalMs": 38.58984000000004,
+    "scanRoutesMs": 10.637242000000072
   },
-  "routeFragments": {},
-  "updatedAt": "2026-08-25T03:38:22.009Z"
+  "routeFragments": {
+    "app/api/discover/movies/route.ts": {
+      "cacheKey": "{\"authPresets\":{\"bearer\":\"BearerAuth\",\"basic\":\"BasicAuth\",\"apikey\":\"ApiKeyAuth\"},\"defaultResponseSet\":\"common\",\"errorConfig\":{\"template\":{\"type\":\"object\",\"properties\":{\"error\":{\"type\":\"string\",\"example\":\"{{ERROR_MESSAGE}}\"},\"code\":{\"type\":\"string\",\"example\":\"{{ERROR_CODE}}\"}}},\"codes\":{\"400\":{\"description\":\"Bad Request\",\"variables\":{\"ERROR_MESSAGE\":\"Invalid request parameters\",\"ERROR_CODE\":\"BAD_REQUEST\"}},\"401\":{\"description\":\"Unauthorized\",\"variables\":{\"ERROR_MESSAGE\":\"Authentication required\",\"ERROR_CODE\":\"UNAUTHORIZED\"}},\"403\":{\"description\":\"Forbidden\",\"variables\":{\"ERROR_MESSAGE\":\"Access denied\",\"ERROR_CODE\":\"FORBIDDEN\"}},\"404\":{\"description\":\"Not Found\",\"variables\":{\"ERROR_MESSAGE\":\"Resource not found\",\"ERROR_CODE\":\"NOT_FOUND\"}},\"409\":{\"description\":\"Conflict\",\"variables\":{\"ERROR_MESSAGE\":\"Resource already exists\",\"ERROR_CODE\":\"CONFLICT\"}},\"500\":{\"description\":\"Internal Server Error\",\"variables\":{\"ERROR_MESSAGE\":\"An unexpected error occurred\",\"ERROR_CODE\":\"INTERNAL_ERROR\"}}}},\"excludeSchemas\":[],\"framework\":{\"kind\":\"nextjs\",\"router\":\"app\"},\"ignoreRoutes\":[],\"includeOpenApiRoutes\":false,\"openapiVersion\":\"3.0\",\"responseSets\":{\"common\":[\"400\",\"500\"],\"auth\":[\"400\",\"401\",\"403\",\"500\"],\"public\":[\"400\",\"500\"]},\"routePath\":\"/discover/movies\",\"schemaBackends\":[\"zod\"],\"schemaFiles\":[]}",
+      "diagnostics": [],
+      "internalSchemas": {},
+      "mtimeMs": 1787791211243.145,
+      "paths": {
+        "/discover/movies": {
+          "get": {
+            "operationId": "get-discover-movies",
+            "summary": "Search for new movies",
+            "description": "Searches for movies using the TMDB API",
+            "tags": [
+              "Discover"
+            ],
+            "parameters": [
+              {
+                "in": "query",
+                "name": "query",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "example"
+              },
+              {
+                "in": "query",
+                "name": "page",
+                "required": false,
+                "schema": {
+                  "type": "number"
+                },
+                "example": 1
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Successful response",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/MovieSearchResult"
+                    }
+                  }
+                }
+              },
+              "400": {
+                "$ref": "#/components/responses/400"
+              },
+              "500": {
+                "$ref": "#/components/responses/500"
+              }
+            }
+          }
+        }
+      },
+      "schemaDependencies": [
+        "/home/angeltrevinov/Documents/Projects/mediaro/schemas/movies.ts"
+      ],
+      "schemas": {},
+      "size": 859,
+      "tags": {
+        "Discover": {
+          "name": "Discover"
+        }
+      },
+      "webhooks": {}
+    }
+  },
+  "updatedAt": "2026-08-27T00:58:18.102Z"
 }

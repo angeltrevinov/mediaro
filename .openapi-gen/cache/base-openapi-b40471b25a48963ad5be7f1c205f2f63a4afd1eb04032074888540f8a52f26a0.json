@@ -27,7 +27,8 @@
             "type": "string"
           },
           "page": {
-            "type": "number"
+            "type": "number",
+            "default": 1
           }
         },
         "required": [
@@ -236,7 +237,8 @@
             "name": "page",
             "required": false,
             "schema": {
-              "type": "number"
+              "type": "number",
+              "default": 1
             },
             "example": 1
           }

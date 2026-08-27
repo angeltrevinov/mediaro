@@ -27,7 +27,8 @@
             "type": "string"
           },
           "page": {
-            "type": "number"
+            "type": "number",
+            "default": 1
           }
         },
         "required": [
@@ -52,20 +53,16 @@
                   "type": "string"
                 },
                 "overview": {
-                  "type": "string",
-                  "nullable": true
+                  "type": "string"
                 },
                 "release_date": {
-                  "type": "string",
-                  "nullable": true
+                  "type": "string"
                 },
                 "poster_path": {
-                  "type": "string",
-                  "nullable": true
+                  "type": "string"
                 },
                 "backdrop_path": {
-                  "type": "string",
-                  "nullable": true
+                  "type": "string"
                 }
               },
               "required": [
@@ -212,59 +209,5 @@
       }
     }
   },
-  "paths": {
-    "/discover/movies": {
-      "get": {
-        "operationId": "get-discover-movies",
-        "summary": "Search for new movies",
-        "description": "Searches for movies using the TMDB API",
-        "tags": [
-          "Discover"
-        ],
-        "parameters": [
-          {
-            "in": "query",
-            "name": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "example": "example"
-          },
-          {
-            "in": "query",
-            "name": "page",
-            "required": false,
-            "schema": {
-              "type": "number"
-            },
-            "example": 1
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MovieSearchResult"
-                }
-              }
-            }
-          },
-          "400": {
-            "$ref": "#/components/responses/400"
-          },
-          "500": {
-            "$ref": "#/components/responses/500"
-          }
-        }
-      }
-    }
-  },
-  "tags": [
-    {
-      "name": "Discover"
-    }
-  ]
+  "paths": {}
 }

@@ -27,11 +27,13 @@
             "type": "string"
           },
           "page": {
+            "default": 1,
             "type": "number"
           }
         },
         "required": [
-          "query"
+          "query",
+          "page"
         ]
       },
       "MovieSearchResult": {
@@ -234,8 +236,9 @@
           {
             "in": "query",
             "name": "page",
-            "required": false,
+            "required": true,
             "schema": {
+              "default": 1,
               "type": "number"
             },
             "example": 1
