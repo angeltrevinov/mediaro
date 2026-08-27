@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const MovieSearchQuery = z.object({
     query: z.string(),
-    page: z.coerce.number().optional(),
+    page: z.coerce.number().default(1)
 });
 
 export const MovieSearchResult = z.object({
