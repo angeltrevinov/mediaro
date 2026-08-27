@@ -111,7 +111,7 @@ export default defineConfig({
   debug: false,
   apiDir: "./app/api",
   routerType: "app",
-  schemaDir: "./app",
+  schemaDir: "./schemas",
   framework: {
     kind: "nextjs",
     router: "app"

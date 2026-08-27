@@ -27,13 +27,12 @@
             "type": "string"
           },
           "page": {
-            "default": 1,
-            "type": "number"
+            "type": "number",
+            "default": 1
           }
         },
         "required": [
-          "query",
-          "page"
+          "query"
         ]
       },
       "MovieSearchResult": {
@@ -54,20 +53,16 @@
                   "type": "string"
                 },
                 "overview": {
-                  "type": "string",
-                  "nullable": true
+                  "type": "string"
                 },
                 "release_date": {
-                  "type": "string",
-                  "nullable": true
+                  "type": "string"
                 },
                 "poster_path": {
-                  "type": "string",
-                  "nullable": true
+                  "type": "string"
                 },
                 "backdrop_path": {
-                  "type": "string",
-                  "nullable": true
+                  "type": "string"
                 }
               },
               "required": [
@@ -236,10 +231,10 @@
           {
             "in": "query",
             "name": "page",
-            "required": true,
+            "required": false,
             "schema": {
-              "default": 1,
-              "type": "number"
+              "type": "number",
+              "default": 1
             },
             "example": 1
           }
