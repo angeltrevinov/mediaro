@@ -39,10 +39,19 @@ export async function searchMovie(
 ): Promise<TMDBMovieSearchResult> {
     try {
         const options = constructEndpointOptions("GET");
+        const params = new URLSearchParams({
+            query,
+            page: String(page),
+            include_adult: String(includeAdult),
+            language,
+        });
         const response = await fetch(
-            `${TMDB_API_URL}/search/movie?query=${query}&page=${page}&include_adult=${includeAdult}&language=${language}`,
+            `${TMDB_API_URL}/search/movie?${params}`,
             options
         );
+        if (!response.ok) {
+            throw new Error(`TMDB API error: ${response.status} ${response.statusText}`);
+        }
         const data = await response.json()
         const movieSearchResponse = TMDBMovieSearchResultSchema.parse(data);
         return movieSearchResponse;

@@ -102,5 +102,14 @@ describe("GET /api/discover/movies", () => {
     expect(data.error).toBe("Failed to fetch movie search results")
   })
 
+  it("returns 400 on missing query parameter", async () => {
+    const request = createRequest("/api/discover/movies")
+    const response = await GET(request)
+    const data = await response.json()
+
+    expect(response.status).toBe(400)
+    expect(data.error).toBe("Invalid request parameters")
+  })
+
 
 })
