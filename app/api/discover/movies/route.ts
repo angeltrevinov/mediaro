@@ -1,5 +1,5 @@
 import { searchMovie } from "@/lib/tmdb";
-import { MovieSearchQuery, MovieSearchResult } from "@/schemas/movies";
+import { MovieSearchQuery, MovieSearchResult } from "@/schemas/movies/movies";
 import { NextRequest, NextResponse } from "next/server";
 import { ZodError } from "zod";
 

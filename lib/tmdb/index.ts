@@ -1,3 +1,3 @@
-import { searchMovie } from "./client";
+import { searchMovie } from "./client/client";
 
 export { searchMovie };

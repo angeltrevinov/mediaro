@@ -3,7 +3,7 @@ import {
   TMDBMovieSchema,
   TMDBMovieSearchResultSchema,
   type TMDBMovie,
-} from "./schemas"
+} from "./schemas";
 
 const validMovie = {
   id: 1,

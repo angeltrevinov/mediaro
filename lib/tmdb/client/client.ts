@@ -1,4 +1,4 @@
-import { TMDBMovieSearchResult, TMDBMovieSearchResultSchema } from "./schemas";
+import { TMDBMovieSearchResult, TMDBMovieSearchResultSchema } from "../schemas/schemas";
 
 const TMDB_API_KEY = process.env.TMDB_API_KEY;
 const TMDB_API_URL = "https://api.themoviedb.org/3";
