@@ -1,19 +1,19 @@
-import { searchMovie } from "@/lib/tmdb";
-import { MovieSearchQuery, MovieSearchResult } from "@/schemas/movies/movies";
+import { MovieDiscoverQuery } from "@/schemas/movies/movies";
+import { discoverMovies } from "@/services/movies";
 import { NextRequest, NextResponse } from "next/server";
 import { ZodError } from "zod";
 
 /**
  * Search for new movies
  * @description Searches for movies using the TMDB API 
- * @query MovieSearchQuery
- * @response MovieSearchResult
+ * @query MovieDiscoverQuery
+ * @response MovieDiscoverResult
  * @openapi
  */
 export async function GET(request: NextRequest): Promise<NextResponse> {
     try {
-        const { query, page } = MovieSearchQuery.parse(Object.fromEntries(request.nextUrl.searchParams));
-        const searchResults = MovieSearchResult.parse(await searchMovie(query, page));
+        const input = Object.fromEntries(request.nextUrl.searchParams);
+        const searchResults = await discoverMovies(input as unknown as MovieDiscoverQuery);
         return NextResponse.json(searchResults);
     } catch (error) {
         if (error instanceof ZodError) {

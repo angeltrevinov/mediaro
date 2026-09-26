@@ -20,7 +20,38 @@
       }
     },
     "schemas": {
-      "MovieSearchQuery": {
+      "Movie": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "title": {
+            "type": "string"
+          },
+          "overview": {
+            "type": "string",
+            "nullable": true
+          },
+          "release_date": {
+            "type": "string",
+            "nullable": true
+          },
+          "poster_path": {
+            "type": "string",
+            "nullable": true
+          },
+          "backdrop_path": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "title"
+        ]
+      },
+      "MovieDiscoverQuery": {
         "type": "object",
         "properties": {
           "query": {
@@ -36,7 +67,7 @@
           "page"
         ]
       },
-      "MovieSearchResult": {
+      "MovieDiscoverResult": {
         "type": "object",
         "properties": {
           "page": {
@@ -45,35 +76,7 @@
           "results": {
             "type": "array",
             "items": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "number"
-                },
-                "title": {
-                  "type": "string"
-                },
-                "overview": {
-                  "type": "string",
-                  "nullable": true
-                },
-                "release_date": {
-                  "type": "string",
-                  "nullable": true
-                },
-                "poster_path": {
-                  "type": "string",
-                  "nullable": true
-                },
-                "backdrop_path": {
-                  "type": "string",
-                  "nullable": true
-                }
-              },
-              "required": [
-                "id",
-                "title"
-              ]
+              "$ref": "#/components/schemas/Movie"
             }
           },
           "total_pages": {
@@ -250,7 +253,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/MovieSearchResult"
+                  "$ref": "#/components/schemas/MovieDiscoverResult"
                 }
               }
             }

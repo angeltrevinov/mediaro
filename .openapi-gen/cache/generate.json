@@ -1,9 +1,9 @@
 {
-  "baseDocumentFile": "/home/angeltrevinov/Projects/mediaro/.openapi-gen/cache/base-openapi-fed41b9fa6e3b2bdf6634fe2868547cacbefd9181d12ad5516773e16cc86ee07.json",
+  "baseDocumentFile": "/home/angeltrevinov/Projects/mediaro/.openapi-gen/cache/base-openapi-edbf058458fdc5f85968543558bc3806d7622d01a16314405ee394528e30ecfc.json",
   "cacheVersion": 2,
   "configPath": "/home/angeltrevinov/Projects/mediaro/openapi-gen.config.ts",
   "diagnostics": [],
-  "fingerprint": "fed41b9fa6e3b2bdf6634fe2868547cacbefd9181d12ad5516773e16cc86ee07",
+  "fingerprint": "edbf058458fdc5f85968543558bc3806d7622d01a16314405ee394528e30ecfc",
   "inputCount": 7,
   "inputs": {
     "/home/angeltrevinov/Projects/mediaro/app/api/discover/movies/route.test.ts": {
@@ -12,9 +12,9 @@
       "size": 3047
     },
     "/home/angeltrevinov/Projects/mediaro/app/api/discover/movies/route.ts": {
-      "hash": "d46a0fe938d597a0e158bb9eb41cf6bb28f74e36e2f3159b1564ebc67e7de7a7",
-      "mtimeMs": 1790040835767.323,
-      "size": 1044
+      "hash": "7dcfed570691bce54cd96bddb020bc680dc08e8245b4bda962dae126e3ca0465",
+      "mtimeMs": 1790392434298.4937,
+      "size": 1012
     },
     "/home/angeltrevinov/Projects/mediaro/openapi-gen.config.ts": {
       "hash": "7cf5e27386506dafef062d6d1ad7b1667ae7cbd119f3c0ad7c0ad48a8a97673f",
@@ -32,9 +32,9 @@
       "size": 1963
     },
     "/home/angeltrevinov/Projects/mediaro/schemas/movies/movies.ts": {
-      "hash": "5cc8360dd2c69245f71bf5037cc78e39eceb022b5757699f7947577aeefb5d27",
-      "mtimeMs": 1788966154650.6638,
-      "size": 530
+      "hash": "c0a1047bce12dbba69f547e7cc99bb804de1e2bbfa5da5ed069519a8caec860d",
+      "mtimeMs": 1790393225020.276,
+      "size": 719
     },
     "/home/angeltrevinov/Projects/mediaro/tsconfig.json": {
       "hash": "d03480fef10b5b49d8c94cb4b71f94aa172d2be49156e4532ec1785c3025d74d",
@@ -44,42 +44,42 @@
   },
   "outputFile": "/home/angeltrevinov/Projects/mediaro/public/openapi.json",
   "performance": {
-    "prepareTemplateMs": 0.12192000000140979,
-    "loadCustomFragmentsMs": 0.0006509999984700698,
-    "prepareDocumentMs": 0.12257099999987986,
-    "scanRouteFilesMs": 0.28329200000007404,
-    "deriveRoutePathMs": 0.2071299999988696,
-    "filterRouteCandidatesMs": 0.022842999998829328,
-    "sourcePrecheckMs": 0.28775099999984377,
-    "readRouteFilesMs": 0.02679100000023027,
-    "parseRouteFilesMs": 0.9208419999995385,
-    "analyzeRouteFilesMs": 4.2954570000001695,
+    "prepareTemplateMs": 0.11007000000000744,
+    "loadCustomFragmentsMs": 0.002375000000029104,
+    "prepareDocumentMs": 0.11244500000003654,
+    "scanRouteFilesMs": 0.27321900000004007,
+    "deriveRoutePathMs": 0.21182900000002292,
+    "filterRouteCandidatesMs": 0.029821999999967375,
+    "sourcePrecheckMs": 0.29962000000000444,
+    "readRouteFilesMs": 0.024792999999988297,
+    "parseRouteFilesMs": 0.8165160000000355,
+    "analyzeRouteFilesMs": 4.343578000000036,
     "typescriptResponseInferenceMs": 0,
-    "processRouteFilesMs": 5.368044999999256,
-    "registerRouteMs": 1.5019049999973504,
-    "getSchemaContentMs": 0.12791000000288477,
-    "createRequestParamsMs": 0.24730500000077882,
+    "processRouteFilesMs": 5.348107999999968,
+    "registerRouteMs": 1.671026999999981,
+    "getSchemaContentMs": 0.13228000000003703,
+    "createRequestParamsMs": 0.266933999999992,
     "createRequestBodyMs": 0,
-    "processResponsesMs": 0.376378000000841,
+    "processResponsesMs": 0.42414700000000494,
     "createResponseSchemaMs": 0,
-    "buildOperationsMs": 3.96931499999846,
-    "sortAndMergePathsMs": 0.13178800000241608,
-    "buildPathsMs": 0.13178800000241608,
-    "defaultComponentsAndErrorsMs": 0.22145600000294507,
-    "mergeSchemasMs": 0.11565699999846402,
-    "zodPreScanMs": 22.311416999997164,
-    "zodPreprocessMs": 4.897408999997424,
+    "buildOperationsMs": 4.568607999999983,
+    "sortAndMergePathsMs": 0.1611939999999663,
+    "buildPathsMs": 0.1611939999999663,
+    "defaultComponentsAndErrorsMs": 0.23557599999998047,
+    "mergeSchemasMs": 0.155117999999959,
+    "zodPreScanMs": 24.014837999999997,
+    "zodPreprocessMs": 5.200534000000005,
     "zodConvertMs": 0,
-    "finalizeDocumentMs": 1.5101699999977427,
-    "totalMs": 40.07777499999793,
-    "scanRoutesMs": 9.62065199999779
+    "finalizeDocumentMs": 1.6993810000000167,
+    "totalMs": 42.979513,
+    "scanRoutesMs": 10.189934999999991
   },
   "routeFragments": {
     "app/api/discover/movies/route.ts": {
       "cacheKey": "{\"authPresets\":{\"bearer\":\"BearerAuth\",\"basic\":\"BasicAuth\",\"apikey\":\"ApiKeyAuth\"},\"defaultResponseSet\":\"common\",\"errorConfig\":{\"template\":{\"type\":\"object\",\"properties\":{\"error\":{\"type\":\"string\",\"example\":\"{{ERROR_MESSAGE}}\"},\"code\":{\"type\":\"string\",\"example\":\"{{ERROR_CODE}}\"}}},\"codes\":{\"400\":{\"description\":\"Bad Request\",\"variables\":{\"ERROR_MESSAGE\":\"Invalid request parameters\",\"ERROR_CODE\":\"BAD_REQUEST\"}},\"401\":{\"description\":\"Unauthorized\",\"variables\":{\"ERROR_MESSAGE\":\"Authentication required\",\"ERROR_CODE\":\"UNAUTHORIZED\"}},\"403\":{\"description\":\"Forbidden\",\"variables\":{\"ERROR_MESSAGE\":\"Access denied\",\"ERROR_CODE\":\"FORBIDDEN\"}},\"404\":{\"description\":\"Not Found\",\"variables\":{\"ERROR_MESSAGE\":\"Resource not found\",\"ERROR_CODE\":\"NOT_FOUND\"}},\"409\":{\"description\":\"Conflict\",\"variables\":{\"ERROR_MESSAGE\":\"Resource already exists\",\"ERROR_CODE\":\"CONFLICT\"}},\"500\":{\"description\":\"Internal Server Error\",\"variables\":{\"ERROR_MESSAGE\":\"An unexpected error occurred\",\"ERROR_CODE\":\"INTERNAL_ERROR\"}}}},\"excludeSchemas\":[],\"framework\":{\"kind\":\"nextjs\",\"router\":\"app\"},\"ignoreRoutes\":[],\"includeOpenApiRoutes\":false,\"openapiVersion\":\"3.0\",\"responseSets\":{\"common\":[\"400\",\"500\"],\"auth\":[\"400\",\"401\",\"403\",\"500\"],\"public\":[\"400\",\"500\"]},\"routePath\":\"/discover/movies\",\"schemaBackends\":[\"zod\"],\"schemaFiles\":[]}",
       "diagnostics": [],
       "internalSchemas": {},
-      "mtimeMs": 1790040835767.323,
+      "mtimeMs": 1790392434298.4937,
       "paths": {
         "/discover/movies": {
           "get": {
@@ -116,7 +116,7 @@
                 "content": {
                   "application/json": {
                     "schema": {
-                      "$ref": "#/components/schemas/MovieSearchResult"
+                      "$ref": "#/components/schemas/MovieDiscoverResult"
                     }
                   }
                 }
@@ -135,7 +135,7 @@
         "/home/angeltrevinov/Projects/mediaro/schemas/movies/movies.ts"
       ],
       "schemas": {},
-      "size": 1044,
+      "size": 1012,
       "tags": {
         "Discover": {
           "name": "Discover"
@@ -144,5 +144,5 @@
       "webhooks": {}
     }
   },
-  "updatedAt": "2026-09-23T17:51:13.920Z"
+  "updatedAt": "2026-09-26T03:32:37.000Z"
 }
