@@ -11,10 +11,12 @@ export default async function Page({ searchParams }: { searchParams: Promise<Sea
     const params = await searchParams;
     const query = params.query ?? "";
 
+    let search = false;
     let movies: Movie[] = [];
     let errorMessage: string | null = null;
 
     if (query) {
+        search = true;
         try {
             const movieDiscoverResult = await searchMovie(query);
             movies = movieDiscoverResult.results;
@@ -24,11 +26,16 @@ export default async function Page({ searchParams }: { searchParams: Promise<Sea
     }
 
     return (
-        <div>
+        <main className="container flex flex-col mx-auto py-8 gap-4">
             <h1>Discover Movies</h1>
             <DiscoverMovieForm initialQuery={query} />
 
+            {!search && <p>Enter a movie name to search for it and add it to your list.</p>}
+
             {errorMessage && <p>{errorMessage}</p>}
+
+            {search && movies.length === 0 && <p>No movies found for "{query}".</p>}
+
             {movies.length > 0 && (
                 <div>
                     <h2>Results for "{query}"</h2>
@@ -40,6 +47,6 @@ export default async function Page({ searchParams }: { searchParams: Promise<Sea
                 </div>
             )}
 
-        </div>
+        </main>
     );
 }

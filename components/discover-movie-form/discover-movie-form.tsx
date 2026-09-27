@@ -43,7 +43,7 @@ export default function DiscoverMovieForm({ initialQuery }: DicoverMovieFormProp
                     control={discoverQueryForm.control}
                     render={({ field, fieldState }) => (
                         <Field data-invalid={fieldState.invalid}>
-                            <FieldLabel htmlFor="query">Search for a movie to discover</FieldLabel>
+                            <FieldLabel htmlFor="query">Search for a movie to add</FieldLabel>
                             <InputGroup>
                                 <InputGroupInput
                                     {...field}
