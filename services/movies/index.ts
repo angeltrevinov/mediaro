@@ -1,9 +1,8 @@
-import { MovieDiscoverQuery, MovieDiscoverResult } from "@/schemas/movies/movies";
+import { MovieDiscoverResult } from "@/schemas/movies/movies";
 import { searchMovie } from "@/lib/tmdb";
 
-export async function discoverMovies(input: MovieDiscoverQuery): Promise<MovieDiscoverResult> {
+export async function discoverMovies(query: string, page: number): Promise<MovieDiscoverResult> {
     try {
-        const { query, page } = MovieDiscoverQuery.parse(input);
         const raw = await searchMovie(query, page);
         return MovieDiscoverResult.parse(raw);
     } catch (error) {

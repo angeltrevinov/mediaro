@@ -9,11 +9,6 @@ export const Movie = z.object({
     backdrop_path: z.string().nullish(),
 });
 
-export const MovieDiscoverQuery = z.object({
-    query: z.string(),
-    page: z.coerce.number().default(1)
-});
-
 export const MovieDiscoverResult = z.object({
     page: z.number(),
     results: z.array(Movie),
@@ -22,5 +17,4 @@ export const MovieDiscoverResult = z.object({
 });
 
 export type Movie = z.infer<typeof Movie>;
-export type MovieDiscoverQuery = z.infer<typeof MovieDiscoverQuery>;
 export type MovieDiscoverResult = z.infer<typeof MovieDiscoverResult>;

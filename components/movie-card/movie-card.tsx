@@ -5,7 +5,7 @@ export function MovieCard({ movie }: { movie: Movie }) {
 
     return (
         <Card className="flex flex-row items-start gap-3 px-3 py-3 sm:items-stretch sm:gap-4 sm:px-4 sm:py-4">
-            <div className="aspect-[2/3] w-20 shrink-0 sm:w-28 md:w-32">
+            <div className="aspect-2/3 w-20 shrink-0 sm:w-28 md:w-32">
                 <img 
                     src={movie.poster_path ?? "/placeholder.png"}
                     alt={movie.title}

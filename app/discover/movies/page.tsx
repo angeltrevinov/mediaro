@@ -1,16 +1,18 @@
 import DiscoverMovieForm from "@/components/discover-movie-form/discover-movie-form";
 import { MovieCard } from "@/components/movie-card/movie-card";
-import { searchMovie } from "@/lib/tmdb";
-import { Movie, MovieDiscoverResult } from "@/schemas/movies/movies";
+import { Movie } from "@/schemas/movies/movies";
+import { discoverMovies } from "@/services/movies";
 
 type SearchParamsTypes = {
     query?: string;
+    page?: string;
 };
 
 export default async function Page({ searchParams }: { searchParams: Promise<SearchParamsTypes> }) {
 
     const params = await searchParams;
     const query = params.query ?? "";
+    const page = parseInt(params.page ?? "1");
 
     let search = false;
     let movies: Movie[] = [];
@@ -20,7 +22,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<Sea
     if (query) {
         search = true;
         try {
-            const movieDiscoverResult = await searchMovie(query);
+            const movieDiscoverResult = await discoverMovies(query, page);
             movies = movieDiscoverResult.results;
             totalResults = movieDiscoverResult.total_results;
         } catch (error) {

@@ -32,9 +32,6 @@ pnpm-debug.log*
 .env*
 !.env.example
 
-# generated OpenAPI artifacts
-.openapi-gen/
-
 # typescript
 *.tsbuildinfo
 next-env.d.ts
