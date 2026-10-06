@@ -1,4 +1,5 @@
 import DiscoverMovieForm from "@/components/discover-movie-form/discover-movie-form";
+import { MovieCard } from "@/components/movie-card/movie-card";
 import { searchMovie } from "@/lib/tmdb";
 import { Movie, MovieDiscoverResult } from "@/schemas/movies/movies";
 
@@ -13,6 +14,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<Sea
 
     let search = false;
     let movies: Movie[] = [];
+    let totalResults: number | null = null;
     let errorMessage: string | null = null;
 
     if (query) {
@@ -20,6 +22,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<Sea
         try {
             const movieDiscoverResult = await searchMovie(query);
             movies = movieDiscoverResult.results;
+            totalResults = movieDiscoverResult.total_results;
         } catch (error) {
             errorMessage = "Failed to fetch movie search results";
         }
@@ -37,11 +40,13 @@ export default async function Page({ searchParams }: { searchParams: Promise<Sea
             {search && movies.length === 0 && <p>No movies found for "{query}".</p>}
 
             {movies.length > 0 && (
-                <div>
-                    <h2>Results for "{query}"</h2>
-                    <ul>
+                <div className="flex flex-col gap-2">
+                    <span>Found {totalResults} Results for "{query}"</span>
+                    <ul className="flex flex-col gap-4">
                         {movies.map((movie) => (
-                            <li key={movie.id}>{movie.title}</li>
+                            <li key={movie.id}>
+                                <MovieCard movie={movie} />
+                            </li>
                         ))}
                     </ul>
                 </div>
