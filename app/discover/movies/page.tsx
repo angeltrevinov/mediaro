@@ -1,5 +1,7 @@
 import DiscoverMovieForm from "@/components/discover-movie-form/discover-movie-form";
 import { MovieCard } from "@/components/movie-card/movie-card";
+import { PaginationControls } from "@/components/pagination-controls/pagination-controls";
+import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { Movie } from "@/schemas/movies/movies";
 import { discoverMovies } from "@/services/movies";
 
@@ -16,7 +18,8 @@ export default async function Page({ searchParams }: { searchParams: Promise<Sea
 
     let search = false;
     let movies: Movie[] = [];
-    let totalResults: number | null = null;
+    let totalResults: number = 0;
+    let totalPages: number = 0;
     let errorMessage: string | null = null;
 
     if (query) {
@@ -25,6 +28,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<Sea
             const movieDiscoverResult = await discoverMovies(query, page);
             movies = movieDiscoverResult.results;
             totalResults = movieDiscoverResult.total_results;
+            totalPages = movieDiscoverResult.total_pages;
         } catch (error) {
             errorMessage = "Failed to fetch movie search results";
         }
@@ -51,6 +55,9 @@ export default async function Page({ searchParams }: { searchParams: Promise<Sea
                             </li>
                         ))}
                     </ul>
+                    {totalPages > 1 && (
+                        <PaginationControls pathName="/discover/movies" query={`query=${query}`} currentPage={page} totalPages={totalPages} />
+                    )}
                 </div>
             )}
 
