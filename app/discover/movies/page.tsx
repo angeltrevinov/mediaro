@@ -1,7 +1,6 @@
 import DiscoverMovieForm from "@/components/discover-movie-form/discover-movie-form";
 import { MovieCard } from "@/components/movie-card/movie-card";
 import { PaginationControls } from "@/components/pagination-controls/pagination-controls";
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { Movie } from "@/schemas/movies/movies";
 import { discoverMovies } from "@/services/movies";
 
@@ -29,7 +28,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<Sea
             movies = movieDiscoverResult.results;
             totalResults = movieDiscoverResult.total_results;
             totalPages = movieDiscoverResult.total_pages;
-        } catch (error) {
+        } catch {
             errorMessage = "Failed to fetch movie search results";
         }
     }
@@ -43,11 +42,11 @@ export default async function Page({ searchParams }: { searchParams: Promise<Sea
 
             {errorMessage && <p>{errorMessage}</p>}
 
-            {search && movies.length === 0 && <p>No movies found for "{query}".</p>}
+            {search && !errorMessage && movies.length === 0 && <p>No movies found for &quot;{query}&quot;.</p>}
 
             {movies.length > 0 && (
                 <div className="flex flex-col gap-2">
-                    <span>Found {totalResults} Results for "{query}"</span>
+                    <span>Found {totalResults} Results for &quot;{query}&quot;</span>
                     <ul className="flex flex-col gap-4">
                         {movies.map((movie) => (
                             <li key={movie.id}>
