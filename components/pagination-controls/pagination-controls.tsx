@@ -22,9 +22,6 @@ export function PaginationControls({ pathName, query, currentPage, totalPages }:
 
 
     function constructPageLink(page: number): string {
-        // Implement the logic to handle page change, e.g., updating the URL or state
-        console.log(`Change to page: ${page}`);
-
         return `${pathName}?${query}&page=${page}`;
     }
 
