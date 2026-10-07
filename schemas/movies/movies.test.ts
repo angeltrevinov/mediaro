@@ -1,28 +1,7 @@
 import { describe, it, expect } from "vitest"
-import { MovieSearchQuery, MovieSearchResult } from "./movies"
+import { Movie, MovieDiscoverResult } from "@/schemas/movies/movies"
 
-describe("MovieSearchQuery", () => {
-  it("parses valid query", () => {
-    const result = MovieSearchQuery.parse({ query: "batman", page: "2" })
-    expect(result).toEqual({ query: "batman", page: 2 })
-  })
-
-  it("defaults page to 1", () => {
-    const result = MovieSearchQuery.parse({ query: "batman" })
-    expect(result.page).toBe(1)
-  })
-
-  it("coerces page string to number", () => {
-    const result = MovieSearchQuery.parse({ query: "batman", page: "5" })
-    expect(result.page).toBe(5)
-  })
-
-  it("rejects missing query", () => {
-    expect(() => MovieSearchQuery.parse({})).toThrow()
-  })
-})
-
-describe("MovieSearchResult", () => {
+describe("MovieDiscoverResult", () => {
   it("parses valid result", () => {
     const data = {
       page: 1,
@@ -39,33 +18,50 @@ describe("MovieSearchResult", () => {
       total_pages: 1,
       total_results: 1,
     }
-    expect(MovieSearchResult.parse(data)).toEqual(data)
+    expect(MovieDiscoverResult.parse(data)).toEqual(data)
   })
 
-  it("allows nullish poster_path and backdrop_path", () => {
-    const data = {
-      page: 1,
-      results: [{ id: 1, title: "Batman", overview: null }],
-      total_pages: 1,
-      total_results: 1,
-    }
-    const result = MovieSearchResult.parse(data)
-    expect(result.results[0].poster_path).toBeUndefined()
-    expect(result.results[0].backdrop_path).toBeUndefined()
-  })
+  it.each([
+    {
+      label: "omitted",
+      optionalFields: {},
+      expected: undefined,
+    },
+    {
+      label: "null",
+      optionalFields: {
+        overview: null,
+        release_date: null,
+        poster_path: null,
+        backdrop_path: null,
+      },
+      expected: null,
+    },
+  ])("allows $label optional movie fields", ({ optionalFields, expected }) => {
+    const result = Movie.parse({
+      id: 1,
+      title: "Batman",
+      ...optionalFields,
+    })
 
-  it("allows nullish overview", () => {
-    const data = {
-      page: 1,
-      results: [{ id: 1, title: "Batman" }],
-      total_pages: 1,
-      total_results: 1,
-    }
-    const result = MovieSearchResult.parse(data)
-    expect(result.results[0].overview).toBeUndefined()
+    expect(result.overview).toBe(expected)
+    expect(result.release_date).toBe(expected)
+    expect(result.poster_path).toBe(expected)
+    expect(result.backdrop_path).toBe(expected)
   })
 
   it("rejects result without required fields", () => {
-    expect(() => MovieSearchResult.parse({})).toThrow()
+    expect(() => MovieDiscoverResult.parse({})).toThrow()
+  })
+
+  it("rejects a movie with an invalid required field", () => {
+    expect(() =>
+      MovieDiscoverResult.parse({
+        page: 1,
+        results: [{ id: "1", title: "Batman" }],
+        total_pages: 1,
+        total_results: 1,
+      })
+    ).toThrow()
   })
 })

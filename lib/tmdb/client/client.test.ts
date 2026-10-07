@@ -1,7 +1,6 @@
-import { describe, it, expect, vi, afterEach } from "vitest"
+import { describe, it, expect, vi, afterEach, beforeEach } from "vitest"
 
 vi.stubEnv("TMDB_API_KEY", "test-api-key")
-vi.spyOn(console, "error").mockImplementation(() => {})
 
 const mockFetch = vi.fn()
 vi.stubGlobal("fetch", mockFetch)
@@ -36,22 +35,28 @@ function mockSuccess(data: unknown = tmdbResponse) {
   })
 }
 
+beforeEach(() => {
+  vi.spyOn(console, "error").mockImplementation(() => {})
+})
+
 afterEach(() => {
   mockFetch.mockReset()
+  vi.restoreAllMocks()
 })
 
 describe("searchMovie", () => {
   it("fetches movies with correct URL and headers", async () => {
     mockSuccess()
 
-    await searchMovie("batman", 1)
+    await searchMovie("batman", 2)
 
-    const url = mockFetch.mock.calls[0][0] as string
-    expect(url).toContain("https://api.themoviedb.org/3/search/movie?")
-    expect(url).toContain("query=batman")
-    expect(url).toContain("page=1")
-    expect(url).toContain("include_adult=false")
-    expect(url).toContain("language=en-US")
+    const url = new URL(mockFetch.mock.calls[0][0] as string)
+    expect(url.origin).toBe("https://api.themoviedb.org")
+    expect(url.pathname).toBe("/3/search/movie")
+    expect(url.searchParams.get("query")).toBe("batman")
+    expect(url.searchParams.get("page")).toBe("2")
+    expect(url.searchParams.get("include_adult")).toBe("false")
+    expect(url.searchParams.get("language")).toBe("en-US")
     expect(mockFetch.mock.calls[0][1]).toMatchObject({
       method: "GET",
       headers: expect.objectContaining({
@@ -89,8 +94,9 @@ describe("searchMovie", () => {
 
     await searchMovie("Rock & Roll")
 
-    const url = mockFetch.mock.calls[0][0] as string
-    expect(url).toContain("query=Rock+%26+Roll")
+    const url = new URL(mockFetch.mock.calls[0][0] as string)
+    expect(url.searchParams.get("query")).toBe("Rock & Roll")
+    expect(url.searchParams.get("page")).toBe("1")
   })
 
   it("throws on non-200 HTTP response", async () => {
@@ -117,9 +123,9 @@ describe("searchMovie", () => {
 
     await searchMovie("batman", 2, true, "es-ES")
 
-    const url = mockFetch.mock.calls[0][0] as string
-    expect(url).toContain("include_adult=true")
-    expect(url).toContain("language=es-ES")
-    expect(url).toContain("page=2")
+    const url = new URL(mockFetch.mock.calls[0][0] as string)
+    expect(url.searchParams.get("include_adult")).toBe("true")
+    expect(url.searchParams.get("language")).toBe("es-ES")
+    expect(url.searchParams.get("page")).toBe("2")
   })
 })
