@@ -56,7 +56,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<Sea
                         ))}
                     </ul>
                     {totalPages > 1 && (
-                        <PaginationControls pathName="/discover/movies" query={`query=${query}`} currentPage={page} totalPages={totalPages} />
+                        <PaginationControls pathName="/discover/movies" query={query} currentPage={page} totalPages={totalPages} />
                     )}
                 </div>
             )}

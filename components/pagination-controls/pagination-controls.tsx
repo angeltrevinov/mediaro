@@ -22,7 +22,11 @@ export function PaginationControls({ pathName, query, currentPage, totalPages }:
 
 
     function constructPageLink(page: number): string {
-        return `${pathName}?${query}&page=${page}`;
+        const searchParams = new URLSearchParams({
+            query,
+            page: page.toString()
+        });
+        return `${pathName}?${searchParams.toString()}`;
     }
 
     return (
