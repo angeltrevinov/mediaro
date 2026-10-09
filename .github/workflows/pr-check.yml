@@ -17,6 +17,7 @@ jobs:
     timeout-minutes: 20
     env:
       TMDB_API_KEY: ${{ secrets.TMDB_API_KEY || 'test-api-key' }}
+      DATABASE_URL: file:./data/mediaro.db
 
     steps:
       - name: Check out repository
