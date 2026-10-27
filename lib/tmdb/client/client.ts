@@ -31,7 +31,7 @@ function constructEndpointOptions(method: string = "GET"): RequestInit {
  * @param language - The language of the results
  * @returns A promise resolving to the search results
  */
-export async function searchMovie(
+export async function searchMovieTMDB(
     query: string,
     page: number = 1,
     includeAdult: boolean = false,

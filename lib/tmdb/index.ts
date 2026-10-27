@@ -1,3 +1,3 @@
-import { searchMovie } from "./client/client";
+import { searchMovieTMDB } from "./client/client";
 
-export { searchMovie };
+export { searchMovieTMDB };
