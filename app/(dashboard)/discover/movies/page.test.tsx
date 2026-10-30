@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react"
 import { beforeEach, describe, expect, it, vi } from "vitest"
-import Page from "@/app/discover/movies/page"
+import Page from "@/app/(dashboard)/discover/movies/page"
 import { discoverMovies } from "@/services/movies"
 
 const { push } = vi.hoisted(() => ({ push: vi.fn() }))

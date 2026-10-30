@@ -5,7 +5,7 @@ vi.stubEnv("TMDB_API_KEY", "test-api-key")
 const mockFetch = vi.fn()
 vi.stubGlobal("fetch", mockFetch)
 
-const { searchMovie } = await import("./client")
+const { searchMovieTMDB } = await import("./client")
 
 const tmdbResponse = {
   page: 1,
@@ -44,11 +44,11 @@ afterEach(() => {
   vi.restoreAllMocks()
 })
 
-describe("searchMovie", () => {
+describe("searchMovieTMDB", () => {
   it("fetches movies with correct URL and headers", async () => {
     mockSuccess()
 
-    await searchMovie("batman", 2)
+    await searchMovieTMDB("batman", 2)
 
     const url = new URL(mockFetch.mock.calls[0][0] as string)
     expect(url.origin).toBe("https://api.themoviedb.org")
@@ -69,7 +69,7 @@ describe("searchMovie", () => {
   it("returns parsed movie search results", async () => {
     mockSuccess()
 
-    const result = await searchMovie("batman")
+    const result = await searchMovieTMDB("batman")
 
     expect(result.page).toBe(1)
     expect(result.results).toHaveLength(1)
@@ -79,7 +79,7 @@ describe("searchMovie", () => {
   it("transforms image paths to full URLs", async () => {
     mockSuccess()
 
-    const result = await searchMovie("batman")
+    const result = await searchMovieTMDB("batman")
 
     expect(result.results[0].poster_path).toBe(
       "https://image.tmdb.org/t/p/w342/poster.jpg"
@@ -92,7 +92,7 @@ describe("searchMovie", () => {
   it("encodes special characters in query", async () => {
     mockSuccess()
 
-    await searchMovie("Rock & Roll")
+    await searchMovieTMDB("Rock & Roll")
 
     const url = new URL(mockFetch.mock.calls[0][0] as string)
     expect(url.searchParams.get("query")).toBe("Rock & Roll")
@@ -107,7 +107,7 @@ describe("searchMovie", () => {
       json: () => Promise.resolve({ status_message: "Invalid API key" }),
     })
 
-    await expect(searchMovie("batman")).rejects.toThrow(
+    await expect(searchMovieTMDB("batman")).rejects.toThrow(
       "TMDB API error: 401 Unauthorized"
     )
   })
@@ -115,13 +115,13 @@ describe("searchMovie", () => {
   it("throws on network error", async () => {
     mockFetch.mockRejectedValueOnce(new Error("Network error"))
 
-    await expect(searchMovie("batman")).rejects.toThrow("Network error")
+    await expect(searchMovieTMDB("batman")).rejects.toThrow("Network error")
   })
 
   it("sends custom language and includeAdult params", async () => {
     mockSuccess()
 
-    await searchMovie("batman", 2, true, "es-ES")
+    await searchMovieTMDB("batman", 2, true, "es-ES")
 
     const url = new URL(mockFetch.mock.calls[0][0] as string)
     expect(url.searchParams.get("include_adult")).toBe("true")
