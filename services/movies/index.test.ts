@@ -1,9 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { searchMovie } from "@/lib/tmdb"
+import { searchMovieTMDB } from "@/lib/tmdb"
 import { discoverMovies } from "@/services/movies"
 
 vi.mock("@/lib/tmdb", () => ({
-  searchMovie: vi.fn(),
+  searchMovieTMDB: vi.fn(),
 }))
 
 const validTMDBResult = {
@@ -43,7 +43,7 @@ const expectedResult = {
 
 describe("discoverMovies", () => {
   beforeEach(() => {
-    vi.mocked(searchMovie).mockReset()
+    vi.mocked(searchMovieTMDB).mockReset()
     vi.spyOn(console, "error").mockImplementation(() => {})
   })
 
@@ -52,14 +52,14 @@ describe("discoverMovies", () => {
   })
 
   it("searches the requested page and returns validated results", async () => {
-    vi.mocked(searchMovie).mockResolvedValue(validTMDBResult)
+    vi.mocked(searchMovieTMDB).mockResolvedValue(validTMDBResult)
 
     await expect(discoverMovies("The Matrix", 2)).resolves.toEqual(expectedResult)
-    expect(searchMovie).toHaveBeenCalledWith("The Matrix", 2)
+    expect(searchMovieTMDB).toHaveBeenCalledWith("The Matrix", 2)
   })
 
   it("logs and rethrows invalid movie results", async () => {
-    vi.mocked(searchMovie).mockResolvedValue({ results: "invalid" } as never)
+    vi.mocked(searchMovieTMDB).mockResolvedValue({ results: "invalid" } as never)
 
     await expect(discoverMovies("The Matrix", 1)).rejects.toThrow()
     expect(console.error).toHaveBeenCalledWith(
@@ -70,7 +70,7 @@ describe("discoverMovies", () => {
 
   it("logs and rethrows errors from the TMDB client", async () => {
     const error = new Error("TMDB unavailable")
-    vi.mocked(searchMovie).mockRejectedValue(error)
+    vi.mocked(searchMovieTMDB).mockRejectedValue(error)
 
     await expect(discoverMovies("The Matrix", 1)).rejects.toBe(error)
     expect(console.error).toHaveBeenCalledWith(

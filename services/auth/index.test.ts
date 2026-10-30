@@ -1,50 +1,77 @@
-import * as argon2 from "argon2";
-import { afterEach, describe, expect, it, vi } from "vitest";
-import { prisma } from "../../lib/prisma";
-import { createUser } from "./index";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-vi.mock("../../lib/prisma", () => ({
-    prisma: {
-        user: {
-            create: vi.fn(),
+const { signInEmail, signUpEmail } = vi.hoisted(() => ({
+    signInEmail: vi.fn(),
+    signUpEmail: vi.fn(),
+}));
+
+vi.mock("@/lib/better-auth/auth", () => ({
+    auth: {
+        api: {
+            signInEmail,
+            signUpEmail,
         },
     },
 }));
 
-describe("createUser", () => {
+import { authenticateUser, createUser } from "./index";
+
+describe("auth services", () => {
+    beforeEach(() => {
+        signInEmail.mockReset();
+        signUpEmail.mockReset();
+    });
+
     afterEach(() => {
         vi.restoreAllMocks();
     });
 
-    it("stores an Argon2id hash and returns no password data", async () => {
-        vi.spyOn(console, "error").mockImplementation(() => {});
-        vi.mocked(prisma.user.create).mockResolvedValue({
-            id: "user-id",
-            email: "person@example.com",
-            name: "Person",
-        } as never);
+    it("registers an email/password account with Better Auth", async () => {
+        await createUser("person@example.com", "password123", "Person");
 
-        const user = await createUser(
-            "person@example.com",
-            "correct horse battery staple",
-            "Person",
-        );
-        const createArgs = vi.mocked(prisma.user.create).mock.calls[0][0];
+        expect(signUpEmail).toHaveBeenCalledWith({
+            body: {
+                name: "Person",
+                email: "person@example.com",
+                password: "password123",
+            },
+        });
+    });
 
-        expect(createArgs.data.password).not.toBe("correct horse battery staple");
-        await expect(
-            argon2.verify(createArgs.data.password, "correct horse battery staple"),
-        ).resolves.toBe(true);
-        expect(createArgs.select).toEqual({
-            id: true,
-            email: true,
-            name: true,
+    it("uses an empty name when none is provided during registration", async () => {
+        await createUser("person@example.com", "password123");
+
+        expect(signUpEmail).toHaveBeenCalledWith({
+            body: {
+                name: "",
+                email: "person@example.com",
+                password: "password123",
+            },
         });
-        expect(user).toEqual({
-            id: "user-id",
-            email: "person@example.com",
-            name: "Person",
+    });
+
+    it("authenticates using the provided email and password", async () => {
+        await authenticateUser("person@example.com", "password123");
+
+        expect(signInEmail).toHaveBeenCalledWith({
+            body: {
+                email: "person@example.com",
+                password: "password123",
+            },
         });
-        expect(user).not.toHaveProperty("password");
+    });
+
+    it("propagates Better Auth registration errors", async () => {
+        const error = new Error("Email already exists");
+        signUpEmail.mockRejectedValue(error);
+
+        await expect(createUser("person@example.com", "password123")).rejects.toBe(error);
+    });
+
+    it("propagates Better Auth login errors", async () => {
+        const error = new Error("Invalid credentials");
+        signInEmail.mockRejectedValue(error);
+
+        await expect(authenticateUser("person@example.com", "password123")).rejects.toBe(error);
     });
 });

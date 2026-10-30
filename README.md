@@ -22,9 +22,14 @@ cp .env.example .env
 mkdir -p data
 ```
 
-Set `TMDB_API_KEY` in `.env` to a valid API key from [The Movie Database (TMDB)](https://www.themoviedb.org/settings/api). The app requires this key to make TMDB requests.
+Configure the values in `.env`:
 
-`DATABASE_URL` in `.env.example` is set to `file:./data/mediaro.db`. Prisma uses this SQLite file for both migrations and application queries; no separate database server is needed. Change this value if you want to store the database elsewhere.
+- `BETTER_AUTH_SECRET` must be a private, random secret of at least 32 characters. Generate one with `openssl rand -base64 32`; use a different value in each environment.
+- `BETTER_AUTH_URL` is the canonical URL of the app. It is set to `http://localhost:3000` for local development; set it to the deployed app's URL in production.
+- `TMDB_API_KEY` must be a valid API key from [The Movie Database (TMDB)](https://www.themoviedb.org/settings/api). The app requires this key to make TMDB requests.
+- `DATABASE_URL` defaults to `file:./data/mediaro.db`. Prisma uses this SQLite file for both migrations and application queries; no separate database server is needed. Change this value if you want to store the database elsewhere.
+
+Mediaro uses Better Auth for email-and-password account registration and login. Better Auth stores users, sessions, and accounts in the SQLite database.
 
 Apply the existing database migrations and generate Prisma Client:
 
