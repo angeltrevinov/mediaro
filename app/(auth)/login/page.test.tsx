@@ -3,17 +3,23 @@ import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import LoginPage from "./page";
 
-const { authenticateUser } = vi.hoisted(() => ({
+const { authenticateUser, push } = vi.hoisted(() => ({
     authenticateUser: vi.fn(),
+    push: vi.fn(),
 }));
 
 vi.mock("@/services/auth", () => ({
     authenticateUser,
 }));
 
+vi.mock("next/navigation", () => ({
+    useRouter: () => ({ push }),
+}));
+
 describe("login page", () => {
     beforeEach(() => {
         authenticateUser.mockReset();
+        push.mockReset();
     });
 
     it("authenticates with the entered email and password", async () => {
@@ -30,6 +36,7 @@ describe("login page", () => {
                 "password123",
             );
         });
+        expect(push).toHaveBeenCalledWith("/");
     });
 
     it("does not authenticate when the email is missing", async () => {
@@ -41,5 +48,6 @@ describe("login page", () => {
 
         expect(await screen.findByText("Invalid email address")).toBeInTheDocument();
         expect(authenticateUser).not.toHaveBeenCalled();
+        expect(push).not.toHaveBeenCalled();
     });
 });

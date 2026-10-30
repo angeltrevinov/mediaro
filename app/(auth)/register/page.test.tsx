@@ -3,17 +3,23 @@ import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import RegisterPage from "./page";
 
-const { createUser } = vi.hoisted(() => ({
+const { createUser, push } = vi.hoisted(() => ({
     createUser: vi.fn(),
+    push: vi.fn(),
 }));
 
 vi.mock("@/services/auth", () => ({
     createUser,
 }));
 
+vi.mock("next/navigation", () => ({
+    useRouter: () => ({ push }),
+}));
+
 describe("register page", () => {
     beforeEach(() => {
         createUser.mockReset();
+        push.mockReset();
     });
 
     it("creates an account using the entered name, email, and password", async () => {
@@ -33,6 +39,7 @@ describe("register page", () => {
                 "Person",
             );
         });
+        expect(push).toHaveBeenCalledWith("");
     });
 
     it("does not create an account when the passwords do not match", async () => {
@@ -47,5 +54,6 @@ describe("register page", () => {
 
         expect(await screen.findByText("Passwords do not match")).toBeInTheDocument();
         expect(createUser).not.toHaveBeenCalled();
+        expect(push).not.toHaveBeenCalled();
     });
 });
