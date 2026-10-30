@@ -1,31 +1,28 @@
-import { prisma } from "../../lib/prisma";
-import * as argon2 from "argon2";
-
+"use server";
+import { auth } from "@/lib/better-auth/auth";
+/**
+ * Creates a new user with the provided email, password, and name.
+ *
+ * @param {string} email - The email address of the new user.
+ * @param {string} password - The plaintext password of the new user, which will be hashed before storage.
+ * @param {string} name - (Optional) The name of the new user.
+ * @returns
+ */
 export async function createUser(email: string, password: string, name?: string) {
-    try {
-        const passwordHash = await argon2.hash(password, {
-            type: argon2.argon2id,
-        });
-        const user = await prisma.user.create({
-            data: {
-                email,
-                password: passwordHash,
-                name,
-            },
-            select: {
-                id: true,
-                email: true,
-                name: true,
-            },
-        });
-        return user;
-        
-    } catch (error) {
-        if (error instanceof Error) {
-            console.error("Error creating user:", error.message);
-        } else {
-            console.error("Unknown error creating user:", error);
+    await auth.api.signUpEmail({
+        body: {
+            name: name ?? "",
+            email,
+            password,
         }
-        throw error;
-    }
+    });
+}
+
+export async function authenticateUser(email: string, password: string) {
+    await auth.api.signInEmail({
+        body: {
+            email,
+            password
+        }
+    });
 }

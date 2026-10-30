@@ -3,10 +3,11 @@ import * as z from "zod";
 import { Controller, useForm } from "react-hook-form";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Field, FieldGroup, FieldLabel, FieldDescription } from "@/components/ui/field";
+import { Field, FieldGroup, FieldLabel, FieldDescription, FieldError } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { createUser } from "@/services/auth";
 
 const registerFormSchema = z.object({
     name: z.string().min(1, "Name is required"),
@@ -32,7 +33,7 @@ export default function RegisterPage() {
 
     async function onSubmit(data: z.infer<typeof registerFormSchema>) {
         try {
-            //await createUser(data.email, data.password, data.name);
+            await createUser(data.email, data.password, data.name);
             console.log("User created successfully");   
         } catch (error) {
             console.error("Error creating user:", error);
@@ -63,9 +64,9 @@ export default function RegisterPage() {
                                             autoComplete="name"
                                         />
                                         {fieldState.error && (
-                                            <p className="text-sm text-destructive">
+                                            <FieldError>
                                                 {fieldState.error.message}
-                                            </p>
+                                            </FieldError>
                                         )}
                                     </Field>
                                 )}
@@ -85,9 +86,9 @@ export default function RegisterPage() {
                                             type="email"
                                         />
                                         {fieldState.error && (
-                                            <p className="text-sm text-destructive">
+                                            <FieldError>
                                                 {fieldState.error.message}
-                                            </p>
+                                            </FieldError>
                                         )}
                                     </Field>
                                 )}
@@ -107,9 +108,9 @@ export default function RegisterPage() {
                                             autoComplete="new-password"
                                         />
                                         {fieldState.error && (
-                                            <p className="text-sm text-destructive">
+                                            <FieldError>
                                                 {fieldState.error.message}
-                                            </p>
+                                            </FieldError>
                                         )}
                                     </Field>
                                 )}
@@ -129,9 +130,9 @@ export default function RegisterPage() {
                                             autoComplete="new-password"
                                         />
                                         {fieldState.error && (
-                                            <p className="text-sm text-destructive">
+                                            <FieldError>
                                                 {fieldState.error.message}
-                                            </p>
+                                            </FieldError>
                                         )}
                                     </Field>
                                 )}

@@ -9,8 +9,9 @@ if (!TMDB_API_KEY) {
 
 /**
  * Construct the options for the TMDB API endpoint
- * @param method - The HTTP method to use
- * @returns The options for the TMDB API endpoint
+ *
+ * @param {string} method - The HTTP method to use
+ * @returns {RequestInit} The options for the TMDB API endpoint
  */
 function constructEndpointOptions(method: string = "GET"): RequestInit {
     const options = {
@@ -25,11 +26,11 @@ function constructEndpointOptions(method: string = "GET"): RequestInit {
 
 /**
  * Searches for movies using the TMDB API based on a query string
- * @param query - The search query
- * @param page - The page number of the results
- * @param includeAdult - Whether to include adult content
- * @param language - The language of the results
- * @returns A promise resolving to the search results
+ * @param {string} query - The search query
+ * @param {number} page - The page number of the results
+ * @param {boolean} includeAdult - Whether to include adult content
+ * @param {string} language - The language of the results
+ * @returns {Promise<TMDBMovieSearchResult>} A promise resolving to the search results
  */
 export async function searchMovieTMDB(
     query: string,
