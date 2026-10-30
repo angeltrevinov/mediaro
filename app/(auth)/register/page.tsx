@@ -1,9 +1,11 @@
 "use client";
+import { useState } from "react";
 import * as z from "zod";
 import { Controller, useForm } from "react-hook-form";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Field, FieldGroup, FieldLabel, FieldDescription, FieldError } from "@/components/ui/field";
+import { ErrorMessage } from "@/components/error-message/error-message";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -23,6 +25,7 @@ const registerFormSchema = z.object({
 export default function RegisterPage() {
 
     const router = useRouter();
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
     
     const registerForm = useForm<z.infer<typeof registerFormSchema>>({
         resolver: zodResolver(registerFormSchema),
@@ -35,11 +38,13 @@ export default function RegisterPage() {
     });
 
     async function onSubmit(data: z.infer<typeof registerFormSchema>) {
+        setErrorMessage(null);
         try {
             await createUser(data.email, data.password, data.name);
             router.push("");
         } catch (error) {
             console.error("Error creating user:", error);
+            setErrorMessage("Unable to create your account. Please try again.");
         }
     }
     
@@ -50,7 +55,15 @@ export default function RegisterPage() {
                 <CardDescription>
                     Enter your information below to create your account and start using Mediario.
                 </CardDescription>
-                <CardContent>
+            </CardHeader>
+            <CardContent>
+                <div className="flex flex-col gap-4">
+                    {errorMessage && (
+                        <ErrorMessage
+                            title="Registration failed"
+                            message={errorMessage}
+                        />
+                    )}
                     <form onSubmit={registerForm.handleSubmit(onSubmit)}>
                         <FieldGroup>
                             <Controller
@@ -59,7 +72,7 @@ export default function RegisterPage() {
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
                                         <FieldLabel htmlFor="name">Name:</FieldLabel>
-                                        <Input 
+                                        <Input
                                             {...field}
                                             id="name"
                                             placeholder="John Doe"
@@ -74,13 +87,13 @@ export default function RegisterPage() {
                                     </Field>
                                 )}
                             />
-                            <Controller 
+                            <Controller
                                 name="email"
                                 control={registerForm.control}
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
                                         <FieldLabel htmlFor="email">Email:</FieldLabel>
-                                        <Input 
+                                        <Input
                                             {...field}
                                             id="email"
                                             placeholder="john.doe@example.com"
@@ -96,13 +109,13 @@ export default function RegisterPage() {
                                     </Field>
                                 )}
                             />
-                            <Controller 
+                            <Controller
                                 name="password"
                                 control={registerForm.control}
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
                                         <FieldLabel htmlFor="password">Password:</FieldLabel>
-                                        <Input 
+                                        <Input
                                             {...field}
                                             id="password"
                                             type="password"
@@ -118,13 +131,13 @@ export default function RegisterPage() {
                                     </Field>
                                 )}
                             />
-                            <Controller 
+                            <Controller
                                 name="confirmPassword"
                                 control={registerForm.control}
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
                                         <FieldLabel htmlFor="confirmPassword">Confirm Password:</FieldLabel>
-                                        <Input 
+                                        <Input
                                             {...field}
                                             id="confirmPassword"
                                             type="password"
@@ -150,8 +163,8 @@ export default function RegisterPage() {
                             </FieldGroup>
                         </FieldGroup>
                     </form>
-                </CardContent>
-            </CardHeader>
+                </div>
+            </CardContent>
         </Card>
     );
 }

@@ -50,4 +50,23 @@ describe("login page", () => {
         expect(authenticateUser).not.toHaveBeenCalled();
         expect(push).not.toHaveBeenCalled();
     });
+
+    it("shows a reusable error alert when authentication fails", async () => {
+        authenticateUser.mockRejectedValue(new Error("Invalid credentials"));
+        const user = userEvent.setup();
+        render(<LoginPage />);
+
+        await user.type(screen.getByLabelText("Email:"), "person@example.com");
+        await user.type(screen.getByLabelText("Password:"), "password123");
+        await user.click(screen.getByRole("button", { name: "Login" }));
+
+        expect(await screen.findByRole("alert")).toBeInTheDocument();
+        expect(screen.getByText("Login failed")).toBeInTheDocument();
+        expect(
+            screen.getByText(
+                "Unable to log in. Check your email and password and try again.",
+            ),
+        ).toBeInTheDocument();
+        expect(push).not.toHaveBeenCalled();
+    });
 });
