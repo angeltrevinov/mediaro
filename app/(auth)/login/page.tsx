@@ -8,6 +8,7 @@ import { Controller, useForm } from "react-hook-form";
 import Link from "next/link";
 import * as z from "zod";
 import { authenticateUser } from "@/services/auth";
+import { useRouter } from "next/navigation";
 
 const loginFormSchema = z.object({
     email: z.string().email("Invalid email address"),
@@ -15,6 +16,8 @@ const loginFormSchema = z.object({
 });
 
 export default function LoginPage() {
+
+    const router = useRouter();
 
     const loginForm = useForm<z.infer<typeof loginFormSchema>>({
         resolver: zodResolver(loginFormSchema),
@@ -27,7 +30,7 @@ export default function LoginPage() {
     async function onSubmit(data: z.infer<typeof loginFormSchema>) {
         try {
             await authenticateUser(data.email, data.password);
-            console.log("Login data:", data);
+            router.push("/");
         } catch (error) {
             console.error("Error logging in:", error);
         }

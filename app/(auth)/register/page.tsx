@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { createUser } from "@/services/auth";
+import { useRouter } from "next/navigation";
 
 const registerFormSchema = z.object({
     name: z.string().min(1, "Name is required"),
@@ -20,6 +21,8 @@ const registerFormSchema = z.object({
 });
 
 export default function RegisterPage() {
+
+    const router = useRouter();
     
     const registerForm = useForm<z.infer<typeof registerFormSchema>>({
         resolver: zodResolver(registerFormSchema),
@@ -34,7 +37,7 @@ export default function RegisterPage() {
     async function onSubmit(data: z.infer<typeof registerFormSchema>) {
         try {
             await createUser(data.email, data.password, data.name);
-            console.log("User created successfully");   
+            router.push("");
         } catch (error) {
             console.error("Error creating user:", error);
         }
