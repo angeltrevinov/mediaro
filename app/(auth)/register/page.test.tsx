@@ -56,4 +56,23 @@ describe("register page", () => {
         expect(createUser).not.toHaveBeenCalled();
         expect(push).not.toHaveBeenCalled();
     });
+
+    it("shows a reusable error alert when account creation fails", async () => {
+        createUser.mockRejectedValue(new Error("Email already exists"));
+        const user = userEvent.setup();
+        render(<RegisterPage />);
+
+        await user.type(screen.getByLabelText("Name:"), "Person");
+        await user.type(screen.getByLabelText("Email:"), "person@example.com");
+        await user.type(screen.getByLabelText("Password:"), "password123");
+        await user.type(screen.getByLabelText("Confirm Password:"), "password123");
+        await user.click(screen.getByRole("button", { name: "Create Account" }));
+
+        expect(await screen.findByRole("alert")).toBeInTheDocument();
+        expect(screen.getByText("Registration failed")).toBeInTheDocument();
+        expect(
+            screen.getByText("Unable to create your account. Please try again."),
+        ).toBeInTheDocument();
+        expect(push).not.toHaveBeenCalled();
+    });
 });

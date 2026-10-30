@@ -1,7 +1,9 @@
 "use client";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel  } from "@/components/ui/field";
+import { ErrorMessage } from "@/components/error-message/error-message";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
@@ -18,6 +20,7 @@ const loginFormSchema = z.object({
 export default function LoginPage() {
 
     const router = useRouter();
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     const loginForm = useForm<z.infer<typeof loginFormSchema>>({
         resolver: zodResolver(loginFormSchema),
@@ -28,11 +31,13 @@ export default function LoginPage() {
     });
 
     async function onSubmit(data: z.infer<typeof loginFormSchema>) {
+        setErrorMessage(null);
         try {
             await authenticateUser(data.email, data.password);
             router.push("/");
         } catch (error) {
             console.error("Error logging in:", error);
+            setErrorMessage("Unable to log in. Check your email and password and try again.");
         }
     }
 
@@ -43,7 +48,14 @@ export default function LoginPage() {
                 <CardDescription>Enter your credentials to access your account</CardDescription>
             </CardHeader>
             <CardContent>
-                <form onSubmit={loginForm.handleSubmit(onSubmit)}>
+                <div className="flex flex-col gap-4">
+                    {errorMessage && (
+                        <ErrorMessage
+                            title="Login failed"
+                            message={errorMessage}
+                        />
+                    )}
+                    <form onSubmit={loginForm.handleSubmit(onSubmit)}>
                     <FieldGroup>
                         <Controller
                             name="email"
@@ -82,11 +94,12 @@ export default function LoginPage() {
                                 <Button type="submit">Login</Button>
                             </Field>
                             <FieldDescription className="px-6 text-center">
-                                Don't have an account? <Link href="/register">Register here</Link>
+                                Don&apos;t have an account? <Link href="/register">Register here</Link>
                             </FieldDescription>
                         </FieldGroup>
                     </FieldGroup>
-                </form>
+                    </form>
+                </div>
             </CardContent>
         </Card>
     );

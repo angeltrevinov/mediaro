@@ -1,8 +1,10 @@
 "use client"
 
+import { useState } from "react"
 import { LogOut } from "lucide-react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
+import { ErrorMessage } from "@/components/error-message/error-message"
 import {
   SidebarMenu,
   SidebarMenuButton,
@@ -27,13 +29,18 @@ function getInitials(name: string | null | undefined) {
 
 export function AppSidebarUser() {
   const router = useRouter()
+  const [logoutError, setLogoutError] = useState(false)
   const { data: session, isPending, error } = authClient.useSession()
 
   const onLogOut = async () => {
+    setLogoutError(false)
     await authClient.signOut({
       fetchOptions: {
         onSuccess: () => {
           router.push("/login") // redirect to login page
+        },
+        onError: () => {
+          setLogoutError(true)
         },
       },
     })
@@ -51,9 +58,10 @@ export function AppSidebarUser() {
 
   if (error) {
     return (
-      <p className="px-3 py-2 text-sm text-destructive">
-        Unable to load account information.
-      </p>
+      <ErrorMessage
+        title="Account unavailable"
+        message="Unable to load account information."
+      />
     )
   }
 
@@ -65,6 +73,14 @@ export function AppSidebarUser() {
 
   return (
     <SidebarMenu>
+      {logoutError && (
+        <SidebarMenuItem>
+          <ErrorMessage
+            title="Logout failed"
+            message="Unable to log out. Please try again."
+          />
+        </SidebarMenuItem>
+      )}
       <SidebarMenuItem>
         <SidebarMenuButton onClick={onLogOut}>
           <LogOut aria-hidden="true" />

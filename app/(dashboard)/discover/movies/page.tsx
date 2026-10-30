@@ -1,6 +1,7 @@
 import DiscoverMovieForm from "@/components/discover-movie-form/discover-movie-form";
 import { MovieCard } from "@/components/movie-card/movie-card";
 import { PaginationControls } from "@/components/pagination-controls/pagination-controls";
+import { ErrorMessage } from "@/components/error-message/error-message";
 import { Movie } from "@/schemas/movies/movies";
 import { discoverMovies } from "@/services/movies";
 
@@ -40,7 +41,12 @@ export default async function Page({ searchParams }: { searchParams: Promise<Sea
 
             {!search && <p>Enter a movie name to search for it and add it to your list.</p>}
 
-            {errorMessage && <p>{errorMessage}</p>}
+            {errorMessage && (
+                <ErrorMessage
+                    title="Unable to search movies"
+                    message={errorMessage}
+                />
+            )}
 
             {search && !errorMessage && movies.length === 0 && <p>No movies found for &quot;{query}&quot;.</p>}
 
