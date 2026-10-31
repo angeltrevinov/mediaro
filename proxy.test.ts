@@ -44,7 +44,7 @@ describe("proxy", () => {
         expect(response.headers.get("x-middleware-next")).toBe("1");
     });
 
-    it("protects the home and movie discovery routes", () => {
-        expect(config.matcher).toEqual(["/", "/discover/:path*"]);
+    it("protects the home, movie discovery, and settings routes", () => {
+        expect(config.matcher).toEqual(["/", "/discover/:path*", "/settings"]);
     });
 });

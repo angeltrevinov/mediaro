@@ -51,6 +51,20 @@ describe("login page", () => {
         expect(push).not.toHaveBeenCalled();
     });
 
+    it("rejects passwords shorter than the shared minimum", async () => {
+        const user = userEvent.setup();
+        render(<LoginPage />);
+
+        await user.type(screen.getByLabelText("Email:"), "person@example.com");
+        await user.type(screen.getByLabelText("Password:"), "short12");
+        await user.click(screen.getByRole("button", { name: "Login" }));
+
+        expect(
+            await screen.findByText("Password must be at least 8 characters long"),
+        ).toBeInTheDocument();
+        expect(authenticateUser).not.toHaveBeenCalled();
+    });
+
     it("shows a reusable error alert when authentication fails", async () => {
         authenticateUser.mockRejectedValue(new Error("Invalid credentials"));
         const user = userEvent.setup();
