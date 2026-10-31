@@ -11,12 +11,22 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { createUser } from "@/services/auth";
 import { useRouter } from "next/navigation";
+import {
+    PASSWORD_MAX_LENGTH,
+    PASSWORD_MIN_LENGTH,
+} from "@/lib/better-auth/password-policy";
 
 const registerFormSchema = z.object({
     name: z.string().min(1, "Name is required"),
     email: z.string().email("Invalid email address"),
-    password: z.string().min(6, "Password must be at least 6 characters long"),
-    confirmPassword: z.string().min(6, "Confirm Password must be at least 6 characters long")
+    password: z
+        .string()
+        .min(PASSWORD_MIN_LENGTH, `Password must be at least ${PASSWORD_MIN_LENGTH} characters long`)
+        .max(PASSWORD_MAX_LENGTH, `Password must be no more than ${PASSWORD_MAX_LENGTH} characters long`),
+    confirmPassword: z
+        .string()
+        .min(PASSWORD_MIN_LENGTH, `Confirm Password must be at least ${PASSWORD_MIN_LENGTH} characters long`)
+        .max(PASSWORD_MAX_LENGTH, `Confirm Password must be no more than ${PASSWORD_MAX_LENGTH} characters long`)
 }).refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
     path: ["confirmPassword"]
@@ -122,6 +132,7 @@ export default function RegisterPage() {
                                             placeholder="••••••••"
                                             aria-invalid={fieldState.invalid}
                                             autoComplete="new-password"
+                                            maxLength={PASSWORD_MAX_LENGTH}
                                         />
                                         {fieldState.error && (
                                             <FieldError>
@@ -144,6 +155,7 @@ export default function RegisterPage() {
                                             placeholder="••••••••"
                                             aria-invalid={fieldState.invalid}
                                             autoComplete="new-password"
+                                            maxLength={PASSWORD_MAX_LENGTH}
                                         />
                                         {fieldState.error && (
                                             <FieldError>

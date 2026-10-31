@@ -72,7 +72,7 @@ export function AppSidebarUser() {
   const { name, email, image } = session.user
 
   return (
-    <SidebarMenu>
+    <>
       {logoutError && (
         <SidebarMenuItem>
           <ErrorMessage
@@ -115,6 +115,6 @@ export function AppSidebarUser() {
           </div>
         </SidebarMenuButton>
       </SidebarMenuItem>
-    </SidebarMenu>
+    </>
   )
 }
