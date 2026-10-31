@@ -35,7 +35,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<Sea
     }
 
     return (
-        <main className="container flex flex-col mx-auto py-8 gap-4">
+        <div className="container flex flex-col mx-auto gap-4">
             <h1>Discover Movies</h1>
             <DiscoverMovieForm initialQuery={query} />
 
@@ -66,6 +66,6 @@ export default async function Page({ searchParams }: { searchParams: Promise<Sea
                 </div>
             )}
 
-        </main>
+        </div>
     );
 }
