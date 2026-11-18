@@ -19,6 +19,7 @@ export const config = {
   matcher: [
     "/",
     "/discover/:path*",
+    "/movie/:path*",
     "/settings",
   ],
 };

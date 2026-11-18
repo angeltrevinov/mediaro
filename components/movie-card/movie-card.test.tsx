@@ -5,6 +5,7 @@ import type { Movie } from "@/schemas/movies/movies"
 
 const movie: Movie = {
   id: 1,
+  tmdb_id: "1",
   title: "The Matrix",
   overview: "A computer hacker learns about the true nature of reality.",
   release_date: "1999-03-31",
@@ -34,6 +35,7 @@ describe("MovieCard", () => {
       <MovieCard
         movie={{
           id: 2,
+          tmdb_id: "2",
           title: "Untitled",
           overview: null,
           release_date: null,

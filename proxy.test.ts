@@ -45,6 +45,6 @@ describe("proxy", () => {
     });
 
     it("protects the home, movie discovery, and settings routes", () => {
-        expect(config.matcher).toEqual(["/", "/discover/:path*", "/settings"]);
+        expect(config.matcher).toEqual(["/", "/discover/:path*", "/movie/:path*", "/settings"]);
     });
 });

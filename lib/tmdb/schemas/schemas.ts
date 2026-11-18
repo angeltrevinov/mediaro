@@ -35,3 +35,24 @@ export const TMDBMovieSearchResultSchema = z.object({
 });
 
 export type TMDBMovieSearchResult = z.infer<typeof TMDBMovieSearchResultSchema>;
+
+export const TMDBMovieDetailsSchema = z.object({
+    adult: z.boolean(),
+    backdrop_path: z.string().nullable().transform(path => constructTMDBImage(path, "w780")),
+    id: z.number(),
+    imdb_id: z.string().nullable(),
+    origin_country: z.array(z.string()),
+    original_language: z.string(),
+    original_title: z.string(),
+    overview: z.string(),
+    popularity: z.number(),
+    poster_path: z.string().nullable().transform(path => constructTMDBImage(path, "w342")),
+    release_date: z.string(),
+    runtime: z.number().nullable(),
+    status: z.string(),
+    title: z.string(),
+    vote_average: z.number(),
+    vote_count: z.number(),
+});
+
+export type TMDBMovieDetails = z.infer<typeof TMDBMovieDetailsSchema>;
