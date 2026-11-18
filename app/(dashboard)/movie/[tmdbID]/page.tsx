@@ -38,7 +38,7 @@ export default async function MoviePage({
 
   return (
     <div className="container mx-auto flex flex-col gap-4">
-      <BackButton href="/discover/movies" />
+      <BackButton />
       {errorMessage || !movie ? (
         <ErrorMessage message={errorMessage ?? "Movie unavailable."} />
       ) : (

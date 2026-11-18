@@ -16,6 +16,7 @@ vi.mock("@/services/movies", () => ({
 
 vi.mock("next/navigation", () => ({
   notFound,
+  useRouter: () => ({ back: vi.fn() }),
 }))
 
 const movie = {
