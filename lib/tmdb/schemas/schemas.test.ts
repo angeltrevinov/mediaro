@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest"
 import {
   TMDBMovieSchema,
+  TMDBMovieDetailsSchema,
   TMDBMovieSearchResultSchema,
   type TMDBMovie,
 } from "./schemas";
@@ -97,5 +98,47 @@ describe("TMDBMovieSearchResultSchema", () => {
 
   it("rejects search results without required fields", () => {
     expect(() => TMDBMovieSearchResultSchema.parse({})).toThrow()
+  })
+})
+
+describe("TMDBMovieDetailsSchema", () => {
+  const movieDetails = {
+    adult: false,
+    backdrop_path: "/2w4xG178RpB4MDAIfTkqAuSJzec.jpg",
+    id: 11,
+    imdb_id: "tt0076759",
+    origin_country: ["US"],
+    original_language: "en",
+    original_title: "Star Wars",
+    overview:
+      "Princess Leia is captured and held hostage by the evil Imperial forces in their effort to take over the galactic Empire. Venturesome Luke Skywalker and dashing captain Han Solo team together with the loveable robot duo R2-D2 and C-3PO to rescue the beautiful princess and restore peace and justice in the Empire.",
+    popularity: 20.6912,
+    poster_path: "/6FfCtAuVAW8XJjZ7eWeLibRLWTw.jpg",
+    release_date: "1977-05-25",
+    runtime: 121,
+    status: "Released",
+    title: "Star Wars",
+    vote_average: 8.2,
+    vote_count: 22061,
+  }
+
+  it("parses the TMDB movie details response", () => {
+    const result = TMDBMovieDetailsSchema.parse(movieDetails)
+    expect(result.id).toBe(11)
+    expect(result.poster_path).toBe(
+      "https://image.tmdb.org/t/p/w342/6FfCtAuVAW8XJjZ7eWeLibRLWTw.jpg"
+    )
+  })
+
+  it("accepts nullable fields when TMDB has no value", () => {
+    const result = TMDBMovieDetailsSchema.parse({
+      ...movieDetails,
+      backdrop_path: null,
+      imdb_id: null,
+      poster_path: null,
+      runtime: null,
+    })
+    expect(result.backdrop_path).toBeNull()
+    expect(result.runtime).toBeNull()
   })
 })

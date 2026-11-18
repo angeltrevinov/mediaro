@@ -1,4 +1,5 @@
-import { TMDBMovieSearchResult, TMDBMovieSearchResultSchema } from "../schemas/schemas";
+import { TMDBNotFoundError } from "../errors";
+import { TMDBMovieDetails, TMDBMovieDetailsSchema, TMDBMovieSearchResult, TMDBMovieSearchResultSchema } from "../schemas/schemas";
 
 const TMDB_API_KEY = process.env.TMDB_API_KEY;
 const TMDB_API_URL = "https://api.themoviedb.org/3";
@@ -56,6 +57,35 @@ export async function searchMovieTMDB(
         const data = await response.json()
         const movieSearchResponse = TMDBMovieSearchResultSchema.parse(data);
         return movieSearchResponse;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
+/**
+ * Fetches detailed information about a specific movie from the TMDB API
+ * 
+ * @param {string} tmdbID 
+ * @param {string} language 
+ * @returns {Promise<TMDBMovieDetails>} A promise resolving to the movie details
+ */
+export async function getMovieDetailsTMDB(tmdbID: string, language: string = "en-US"): Promise<TMDBMovieDetails> {
+    try {
+        const options = constructEndpointOptions("GET");
+        const response = await fetch(
+            `${TMDB_API_URL}/movie/${tmdbID}?language=${language}`,
+            options
+        );
+        if (response.status === 404) {
+            throw new TMDBNotFoundError(`Movie ${tmdbID} not found`);
+        }
+        if (!response.ok) {
+            throw new Error(`TMDB API error: ${response.status} ${response.statusText}`);
+        }
+        const data = await response.json();
+        const movieDetails = TMDBMovieDetailsSchema.parse(data);
+        return movieDetails;
     } catch (error) {
         console.error(error);
         throw error;

@@ -5,7 +5,8 @@ vi.stubEnv("TMDB_API_KEY", "test-api-key")
 const mockFetch = vi.fn()
 vi.stubGlobal("fetch", mockFetch)
 
-const { searchMovieTMDB } = await import("./client")
+const { searchMovieTMDB, getMovieDetailsTMDB } = await import("./client")
+const { TMDBNotFoundError } = await import("../errors")
 
 const tmdbResponse = {
   page: 1,
@@ -127,5 +128,34 @@ describe("searchMovieTMDB", () => {
     expect(url.searchParams.get("include_adult")).toBe("true")
     expect(url.searchParams.get("language")).toBe("es-ES")
     expect(url.searchParams.get("page")).toBe("2")
+  })
+})
+
+
+describe("getMovieDetailsTMDB", () => {
+  it("throws TMDBNotFoundError on a 404", async () => {
+    mockFetch.mockResolvedValueOnce({
+      ok: false,
+      status: 404,
+      statusText: "Not Found",
+      json: () => Promise.resolve({}),
+    })
+
+    await expect(getMovieDetailsTMDB("0")).rejects.toBeInstanceOf(
+      TMDBNotFoundError
+    )
+  })
+
+  it("throws a generic error on other failures", async () => {
+    mockFetch.mockResolvedValueOnce({
+      ok: false,
+      status: 500,
+      statusText: "Server Error",
+      json: () => Promise.resolve({}),
+    })
+
+    const error = await getMovieDetailsTMDB("1").catch((e) => e)
+    expect(error).toBeInstanceOf(Error)
+    expect(error).not.toBeInstanceOf(TMDBNotFoundError)
   })
 })

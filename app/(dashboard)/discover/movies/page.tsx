@@ -4,6 +4,7 @@ import { PaginationControls } from "@/components/pagination-controls/pagination-
 import { ErrorMessage } from "@/components/error-message/error-message";
 import { Movie } from "@/schemas/movies/movies";
 import { discoverMovies } from "@/services/movies";
+import Link from "next/link";
 
 type SearchParamsTypes = {
     query?: string;
@@ -55,8 +56,10 @@ export default async function Page({ searchParams }: { searchParams: Promise<Sea
                     <span>Found {totalResults} Results for &quot;{query}&quot;</span>
                     <ul className="flex flex-col gap-4">
                         {movies.map((movie) => (
-                            <li key={movie.id}>
-                                <MovieCard movie={movie} />
+                            <li key={movie.tmdb_id}>
+                                <Link href={`/movie/${movie.tmdb_id}`}>
+                                    <MovieCard movie={movie} />
+                                </Link>
                             </li>
                         ))}
                     </ul>
